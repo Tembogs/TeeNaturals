@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaBars, FaTimes, FaShoppingBag, FaSearch, FaLeaf } from 'react-icons/fa';
+import { FaBars, FaTimes, FaShoppingBag } from 'react-icons/fa';
 import { useCart } from '../context/CartContext'; 
 import { Link } from "react-router-dom"; 
 
@@ -36,26 +36,26 @@ const TeeNaturalNavbar = () => {
             : 'bg-[#1a3a2e]/95 backdrop-blur-sm py-4'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 flex items-center">
-          
-          {/* Logo */}
-          <motion.div whileHover={{ scale: 1.05 }} className="flex items-center gap-2 cursor-pointer">
+        <div className="max-w-7xl mx-auto px-4 flex items-center justify-between w-full">
+
+          {/* Left: Logo */}
+          <motion.div whileHover={{ scale: 1.05 }}>
             <Link to="/" className="flex items-center gap-2">
               <motion.img
                 src="/favicon.jpg"
                 alt="Tee Natural & Essentials"
-                className="w-12 h-12 object-contain"
+                className="w-10 h-10 sm:w-12 sm:h-12 object-contain"
                 animate={{ rotate: 360 }}
                 transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
               />
-              <div className="text-xl md:text-2xl font-['Playfair_Display'] text-white font-bold">
+              <div className="text-lg sm:text-xl md:text-2xl font-['Playfair_Display'] text-white font-bold leading-tight">
                 Tee Natural <span className="text-[#d4af37]">&</span> Essentials
               </div>
             </Link>
           </motion.div>
 
-          {/* Desktop Nav - Centered */}
-          <div className="hidden lg:flex items-center gap-8 absolute left-1/2 transform -translate-x-1/2">
+          {/* Center (Desktop Only) */}
+          <div className="hidden lg:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
             {navLinks.map((link, index) => (
               <div key={index} className="relative group">
                 <Link
@@ -69,7 +69,7 @@ const TeeNaturalNavbar = () => {
             ))}
           </div>
 
-          {/* Desktop Actions - Right Side */}
+          {/* Desktop Right */}
           <div className="hidden lg:flex items-center gap-4 ml-auto">
             <Link
               to="/products"
@@ -84,7 +84,7 @@ const TeeNaturalNavbar = () => {
           <motion.button
             whileTap={{ scale: 0.9 }}
             onClick={() => setMenuOpen(!menuOpen)}
-            className="lg:hidden text-white text-2xl z-50"
+            className="lg:hidden text-white text-2xl ml-4"
           >
             {menuOpen ? <FaTimes /> : <FaBars />}
           </motion.button>
@@ -104,7 +104,7 @@ const TeeNaturalNavbar = () => {
                 className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
               />
               
-              {/* Modern Mobile Menu */}
+              {/* Mobile Menu */}
               <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -113,7 +113,8 @@ const TeeNaturalNavbar = () => {
                 className="fixed top-20 left-4 right-4 bg-[#1a3a2e]/98 backdrop-blur-xl z-50 rounded-2xl shadow-2xl border border-white/10 overflow-hidden"
               >
                 <div className="p-6">
-                  {/* Links */}
+
+                  {/* Mobile Links */}
                   <nav className="flex flex-col gap-1">
                     {navLinks.map((link, index) => (
                       <motion.div
@@ -136,7 +137,7 @@ const TeeNaturalNavbar = () => {
                   {/* Divider */}
                   <div className="my-4 h-px bg-white/10" />
 
-                  {/* Actions */}
+                  {/* Shop Button */}
                   <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
