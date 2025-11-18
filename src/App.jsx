@@ -12,6 +12,8 @@ import Cart from './pages/Cart'
 import { CartProvider } from './context/CartContext'
 import TeeNaturalAbout from './pages/About'
 import NotFound from './pages/NotFound'
+
+
 function App() {
   
 
@@ -27,6 +29,8 @@ function App() {
          <Route path='/about' element={<TeeNaturalAbout />} />
          <Route path='/contact' element={<TeeNaturalContact />} />
          <Route path="*" element={<NotFound />} />
+         <Route path='/learn-more' element={<LearnMore />} />
+         <Route path='/sustainability' element={<SustainabilityPage />} />
 
         </Routes>
         <Footer />
@@ -37,5 +41,7 @@ function App() {
   )
 }
 import TeeNaturalContact from './pages/Contact'
+import LearnMore from './pages/LearnMore'
+import SustainabilityPage from './pages/Sustainability'
 
 export default App

@@ -2,6 +2,7 @@ import React from 'react';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { FaLeaf, FaSpa, FaHeart, FaStar, FaShoppingBag } from 'react-icons/fa';
 import { GiHealthNormal, GiFlowerPot } from 'react-icons/gi';
+import { Link } from 'react-router-dom';
 
 const TeeNaturalLanding = () => {
   const { scrollYProgress } = useScroll();
@@ -79,6 +80,7 @@ const TeeNaturalLanding = () => {
                 transition={{ delay: 0.8 }}
                 className="flex flex-wrap gap-4"
               >
+               <Link to="/products">
                 <motion.button
                   whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(212, 175, 55, 0.5)" }}
                   whileTap={{ scale: 0.95 }}
@@ -86,13 +88,17 @@ const TeeNaturalLanding = () => {
                 >
                   <FaShoppingBag />
                   Shop Now
-                </motion.button>
+                </motion.button> 
+               </Link>
+                
+                <Link to="/about">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   className="border-2 border-white text-white px-8 py-4 rounded-full font-semibold"
                 >
                   Learn More
                 </motion.button>
+                </Link>
               </motion.div>
 
               {/* Coconut Badge */}
@@ -113,7 +119,7 @@ const TeeNaturalLanding = () => {
                 </div>
                 <div className="text-white">
                   <div className="text-3xl font-['Playfair_Display'] font-bold">100%</div>
-                  <div className="text-sm opacity-80">Organic</div>
+                  <div className="text-sm opacity-80">Natural</div>
                 </div>
               </motion.div>
             </motion.div>
@@ -139,8 +145,8 @@ const TeeNaturalLanding = () => {
               >
                 <div className="w-full aspect-square bg-gradient-to-br from-stone-200 to-stone-300 rounded-[40%_60%_70%_30%/40%_50%_60%_50%] flex items-center justify-center shadow-2xl overflow-hidden">
                   <img 
-                    src="https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=800&q=80" 
-                    alt="Woman applying natural skincare"
+                    src="/teehero.jpg" 
+                    alt="man applying natural skincare"
                     className="w-full h-full object-cover"
                   />
                 </div>
@@ -178,7 +184,7 @@ const TeeNaturalLanding = () => {
           <p className="text-white/60 text-sm font-['Cormorant_Garamond'] italic">
             Natural Growth<br />
             Always be gentle<br />
-            with your face
+            with your Skin
           </p>
         </motion.div>
       </section>
@@ -198,13 +204,13 @@ const TeeNaturalLanding = () => {
               <span className="text-[#d4af37]">Skincare Experience</span>
             </h2>
             <p className="text-[#1a3a2e]/70 max-w-2xl mx-auto">
-              Let your skin naturally renew itself, apply day for a clear, youthful face everybody!
+              Let your skin naturally renew itself, apply daily for a clear, youthful face!
             </p>
           </motion.div>
 
           <div className="grid md:grid-cols-3 gap-8">
             {[
-              { icon: FaLeaf, title: "100% Natural", desc: "All organic ingredients sourced sustainably" },
+              { icon: FaLeaf, title: "100% Natural", desc: "All natural ingredients are sourced sustainably" },
               { icon: GiHealthNormal, title: "Gentle Formula", desc: "Powered by harmony for your skin and soul" },
               { icon: FaHeart, title: "For Everyone", desc: "Suitable for all skin types and ages" }
             ].map((feature, i) => (
@@ -248,8 +254,8 @@ const TeeNaturalLanding = () => {
 
           <div className="grid md:grid-cols-2 gap-8">
             {[
-              { title: "Skincare", color: "from-cyan-400 to-cyan-600", items: ["Cleansers", "Serums", "Moisturizers"] },
-              { title: "Haircare", color: "from-amber-400 to-amber-600", items: ["Shampoos", "Conditioners", "Hair Oils"] }
+              { title: "Skincare", color: "from-amber-400 to-amber-600", items: ["Cleansers", "Serums", "Moisturizers"] },
+              { title: "Haircare", color: "from-green-400 to-green-600", items: ["Shampoos", "Conditioners", "Hair Oils"] }
             ].map((category, i) => (
               <motion.div
                 key={i}
@@ -286,6 +292,7 @@ const TeeNaturalLanding = () => {
                   />
                 </div>
                 <div className="p-6">
+                  <Link to="/products">
                   <motion.button
                     whileHover={{ x: 5 }}
                     className="flex items-center gap-2 text-[#1a3a2e] font-semibold group-hover:text-[#d4af37] transition-colors"
@@ -298,6 +305,7 @@ const TeeNaturalLanding = () => {
                       →
                     </motion.span>
                   </motion.button>
+                  </Link>
                 </div>
               </motion.div>
             ))}
@@ -335,6 +343,7 @@ const TeeNaturalLanding = () => {
             Join thousands who trust natural beauty solutions
           </motion.p>
           
+         <Link to= "/products">
           <motion.button
             whileHover={{ scale: 1.05, boxShadow: "0 0 40px rgba(212, 175, 55, 0.6)" }}
             whileTap={{ scale: 0.95 }}
@@ -342,6 +351,7 @@ const TeeNaturalLanding = () => {
           >
             Start Your Journey
           </motion.button>
+         </Link>
         </div>
       </AnimatedSection>
     </div>

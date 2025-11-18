@@ -7,10 +7,6 @@ import { Link } from "react-router-dom";
 const TeeNaturalNavbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
-
-  const [searchQuery, setSearchQuery] = useState("");
-  const handleSearchChange = (e) => setSearchQuery(e.target.value);
 
   const { state } = useCart();
   const cartCount = state.cartItems.reduce((acc, item) => acc + item.quantity, 0);
@@ -24,6 +20,7 @@ const TeeNaturalNavbar = () => {
   const navLinks = [
     { name: 'About', href: '/about' },
     { name: 'Reviews', href: '/reviews' },
+    { name: 'Contact Us', href: '/contact' },
   ];
 
   return (
@@ -39,7 +36,7 @@ const TeeNaturalNavbar = () => {
             : 'bg-[#1a3a2e]/95 backdrop-blur-sm py-4'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 flex items-center">
           
           {/* Logo */}
           <motion.div whileHover={{ scale: 1.05 }} className="flex items-center gap-2 cursor-pointer">
@@ -57,8 +54,8 @@ const TeeNaturalNavbar = () => {
             </Link>
           </motion.div>
 
-          {/* Desktop Nav */}
-          <div className="hidden lg:flex items-center gap-8">
+          {/* Desktop Nav - Centered */}
+          <div className="hidden lg:flex items-center gap-8 absolute left-1/2 transform -translate-x-1/2">
             {navLinks.map((link, index) => (
               <div key={index} className="relative group">
                 <Link
@@ -72,17 +69,8 @@ const TeeNaturalNavbar = () => {
             ))}
           </div>
 
-          {/* Desktop Actions */}
-          <div className="hidden lg:flex items-center gap-4">
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={() => setSearchOpen(!searchOpen)}
-              className="text-white hover:text-[#d4af37] transition-colors"
-            >
-              <FaSearch className="text-xl" />
-            </motion.button>
-
+          {/* Desktop Actions - Right Side */}
+          <div className="hidden lg:flex items-center gap-4 ml-auto">
             <Link
               to="/products"
               className="bg-[#d4af37] text-[#1a3a2e] px-6 py-2 rounded-full font-semibold text-sm flex items-center gap-2"
@@ -102,51 +90,70 @@ const TeeNaturalNavbar = () => {
           </motion.button>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile Menu Overlay */}
         <AnimatePresence>
           {menuOpen && (
-            <motion.div
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ duration: 0.3, ease: "easeInOut" }}
-              className="fixed top-0 right-0 w-3/4 max-w-xs h-full bg-[#1a3a2e] bg-opacity-100 z-50 p-6 flex flex-col gap-6 shadow-xl"
-            >
-              {/* Close Button */}
-              <button
+            <>
+              {/* Backdrop */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
                 onClick={() => setMenuOpen(false)}
-                className="text-white text-2xl ml-auto"
+                className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
+              />
+              
+              {/* Modern Mobile Menu */}
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+                className="fixed top-20 left-4 right-4 bg-[#1a3a2e]/98 backdrop-blur-xl z-50 rounded-2xl shadow-2xl border border-white/10 overflow-hidden"
               >
-                <FaTimes />
-              </button>
+                <div className="p-6">
+                  {/* Links */}
+                  <nav className="flex flex-col gap-1">
+                    {navLinks.map((link, index) => (
+                      <motion.div
+                        key={index}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.1 }}
+                      >
+                        <Link
+                          to={link.href}
+                          onClick={() => setMenuOpen(false)}
+                          className="block text-white text-lg font-medium hover:text-[#d4af37] hover:bg-white/5 transition-all px-4 py-3 rounded-lg"
+                        >
+                          {link.name}
+                        </Link>
+                      </motion.div>
+                    ))}
+                  </nav>
 
-              {/* Links */}
-              <nav className="flex flex-col gap-4 mt-4">
-                {navLinks.map((link, index) => (
-                  <Link
-                    key={index}
-                    to={link.href}
-                    onClick={() => setMenuOpen(false)}
-                    className="text-white text-lg font-medium hover:text-[#d4af37] transition-colors"
+                  {/* Divider */}
+                  <div className="my-4 h-px bg-white/10" />
+
+                  {/* Actions */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                    className="flex flex-col gap-3"
                   >
-                    {link.name}
-                  </Link>
-                ))}
-              </nav>
-
-              {/* Actions */}
-              <div className="mt-auto flex flex-col gap-3">
-                <Link
-                  to="/products"
-                  onClick={() => setMenuOpen(false)}
-                  className="bg-[#d4af37] text-[#1a3a2e] px-4 py-2 rounded-full font-semibold flex items-center justify-center gap-2"
-                >
-                  <FaShoppingBag /> Shop Now
-                </Link>
-
-               
-              </div>
-            </motion.div>
+                    <Link
+                      to="/products"
+                      onClick={() => setMenuOpen(false)}
+                      className="bg-[#d4af37] hover:bg-[#c29d2f] text-[#1a3a2e] px-4 py-3 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all shadow-lg"
+                    >
+                      <FaShoppingBag /> Shop Now
+                    </Link>
+                  </motion.div>
+                </div>
+              </motion.div>
+            </>
           )}
         </AnimatePresence>
       </motion.nav>

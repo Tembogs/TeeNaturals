@@ -12,10 +12,10 @@ const TeeNaturalContact = () => {
   });
   const [submitted, setSubmitted] = useState(false);
 
-  const VENDOR_PHONE = "2348012345678"; // Replace with actual phone number
+  const VENDOR_PHONE = "234 805 506 1699"; 
   const VENDOR_WHATSAPP = `https://wa.me/${VENDOR_PHONE}`;
-  const VENDOR_EMAIL = "info@teenaturalessentials.com"; // Replace with actual email
-  const VENDOR_ADDRESS = "123 Beauty Lane, Lagos, Nigeria"; // Replace with actual address
+  const VENDOR_EMAIL = "Ibrahimfateemah433@gmail.com"; 
+  const VENDOR_ADDRESS = "Ilorin International Airport Road, Kwara, Nigeria"; 
 
   const handleChange = (e) => {
     setFormData({
@@ -42,7 +42,7 @@ const TeeNaturalContact = () => {
     {
       icon: FaWhatsapp,
       title: 'WhatsApp',
-      value: '+234 801 234 5678',
+      value: '+234 805 506 1699',
       link: VENDOR_WHATSAPP,
       color: 'from-[#25D366] to-[#128C7E]',
       description: 'Chat with us instantly'
@@ -50,7 +50,7 @@ const TeeNaturalContact = () => {
     {
       icon: FaPhone,
       title: 'Phone',
-      value: '+234 801 234 5678',
+      value: '+234 805 506 1699',
       link: `tel:${VENDOR_PHONE}`,
       color: 'from-[#d4af37] to-[#b8941f]',
       description: 'Call us anytime'
@@ -58,7 +58,7 @@ const TeeNaturalContact = () => {
     {
       icon: FaEnvelope,
       title: 'Email',
-      value: 'info@teenaturalessentials.com',
+      value: 'ibraheemfatimah433@gmail.com',
       link: `mailto:${VENDOR_EMAIL}`,
       color: 'from-[#1a3a2e] to-[#2d5a47]',
       description: 'Send us an email'
@@ -66,17 +66,16 @@ const TeeNaturalContact = () => {
     {
       icon: FaMapMarkerAlt,
       title: 'Location',
-      value: 'Lagos, Nigeria',
-      link: 'https://maps.google.com',
+      value: 'Kwara, Nigeria',
+      link: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3939.5612946190827!2d4.491408!3d8.4312748!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1037acc6dad7fb0d%3A0x5ff248cc35ee5bb7!2sAirport%20Rd%2C%20Kwara!5e0!3m2!1sen!2sng!4v1731840000000!5m2!1sen!2sng',
       color: 'from-red-500 to-red-600',
       description: 'Visit our store'
     }
   ];
 
   const workingHours = [
-    { day: 'Monday - Friday', hours: '9:00 AM - 6:00 PM' },
-    { day: 'Saturday', hours: '10:00 AM - 4:00 PM' },
-    { day: 'Sunday', hours: 'Closed' }
+    { day: 'Tuesday - Sunday', hours: '24hrs Open' },
+    { day: 'Monday', hours: 'Closed' }
   ];
 
   const faqs = [
