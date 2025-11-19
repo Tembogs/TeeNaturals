@@ -31,7 +31,10 @@ function App() {
          <Route path="*" element={<NotFound />} />
          <Route path='/learn-more' element={<LearnMore />} />
          <Route path='/sustainability' element={<SustainabilityPage />} />
-
+         <Route path='/spa-bookings' element={<SpaBookingPage />} />
+         <Route path='/consultation' element={<ConsultationPage />} />
+         <Route path='/reviews' element={<ReviewsPage />} />
+         
         </Routes>
         <Footer />
       
@@ -43,5 +46,8 @@ function App() {
 import TeeNaturalContact from './pages/Contact'
 import LearnMore from './pages/LearnMore'
 import SustainabilityPage from './pages/Sustainability'
+import SpaBookingPage from './pages/SpaBookings'
+import ConsultationPage from './pages/Consultations'
+import ReviewsPage from './pages/Reviews'
 
 export default App

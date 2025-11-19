@@ -21,6 +21,8 @@ const TeeNaturalNavbar = () => {
     { name: 'About', href: '/about' },
     { name: 'Reviews', href: '/reviews' },
     { name: 'Contact Us', href: '/contact' },
+    {name: 'Consultation', href: '/consultation' },
+    {name: 'Spa Bookings', href: '/spa-bookings' },
   ];
 
   return (
