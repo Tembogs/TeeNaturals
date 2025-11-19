@@ -16,7 +16,7 @@ const PRODUCTS = [
   {
     id: 1,
     name: "Luminous Black Soap",
-    price: 5300,
+    price: 5500,
     category: "SKINCARE",
     image:
       "https://res.cloudinary.com/decgjhtlb/image/upload/v1763397574/Luminous_blasck_soap_zokbxo.jpg",
@@ -24,8 +24,8 @@ const PRODUCTS = [
   },
   {
     id: 2,
-    name: "Hydrating Facial Soap",
-    price: 3400,
+    name: "Hydrating Face Soap",
+    price: 4800,
     category: "SKINCARE",
     image:
       "https://res.cloudinary.com/decgjhtlb/image/upload/v1763397574/Hyrating_Facial_Soap_denejh.jpg",
@@ -33,8 +33,8 @@ const PRODUCTS = [
   },
   {
     id: 3,
-    name: "Anti Pimple Soap",
-    price: 4800,
+    name: "Anti Pimple Plastic Soap",
+    price: 6500,
     category: "SKINCARE",
     image:
       "https://res.cloudinary.com/decgjhtlb/image/upload/v1763397572/Anti_pimples_soap_sximbp.jpg",
@@ -43,7 +43,7 @@ const PRODUCTS = [
   {
     id: 4,
     name: "Body Oil",
-    price: 3200,
+    price: 6200,
     category: "SKINCARE",
     image:
       "https://res.cloudinary.com/decgjhtlb/image/upload/v1763397573/Body_Oil_pfexql.jpg",
@@ -52,7 +52,7 @@ const PRODUCTS = [
   {
     id: 5,
     name: "Arabian Hair Oil",
-    price: 2800,
+    price: 6500,
     category: "HAIRCARE",
     image:
       "https://res.cloudinary.com/decgjhtlb/image/upload/v1763397573/arabian_hair_oil_x59xny.jpg",
@@ -61,11 +61,19 @@ const PRODUCTS = [
   {
     id: 6,
     name: "Hair Mask",
-    price: 3600,
+    price: 8000,
     category: "HAIRCARE",
     image:
       "https://res.cloudinary.com/decgjhtlb/image/upload/v1763397573/Hair_mask_dtzmss.jpg",
     description: "Deep conditioning hair mask",
+  },
+  {
+    id: 7,
+    name: "Molato Body Soap",
+    price: 8000,
+    category: "SKINCARE",
+    image: "/molato.jpg",
+    description: "Exfoliating body soap for smooth skin",
   },
 ];
 
