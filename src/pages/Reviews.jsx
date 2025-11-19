@@ -104,6 +104,22 @@ const ReviewsPage = () => {
         review: "The shampoo don almost finish, My friends don finish am for me, The fact that its soapy and it smells so nice.",
         product: "Herbal Shampoo",
         verified: true
+    },
+    {
+        id: 11,
+        name: "Samia Owolewa",
+        image: "/api/placeholder/400/400",
+        rating: 5,
+        date: "January 2024",
+        review:  "Ewoo compliment ana yen po🤧 People kept complimenting my skin especially my course mates that know how my face was when I left school, compliment yiii po.  Tee naturals and essentials took a huge part in making my nikkah a beautiful one and I am grateful.I made an absolutely gorgeous bride ma’am.  Jazakumullahu Khairan ma.."
+    },
+    {
+        id: 12,
+        name: "Samia Owolewa",
+        image: "/api/placeholder/400/400",
+        rating: 5,
+        date: "January 2024",
+        review: "Asalamualaikum warahmatullahi ma I am happy to be one of tee queens ooo💃💃 In less than two weeks there is already significant changes on my skin, my hyperpigmentation is clearing and my pores are reducing too.Allahumma baarik tee natural. You are really good at what you do ooo"
     }
   ]);
 
