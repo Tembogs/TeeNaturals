@@ -60,7 +60,7 @@ const Footer = () => {
                 Tee Natural <span className="text-[#d4af37]">&</span> Essentials
               </div>
               <p className="text-white/60 mb-6 text-sm leading-relaxed">
-                Natural Beauty, Naturally You. Crafted with nature’s finest ingredients.
+                Natural Beauty, Naturally You. Crafted with nature's finest ingredients.
               </p>
 
               {/* Social Icons */}
@@ -168,14 +168,19 @@ const Footer = () => {
               whileInView={{ opacity: 1 }}
               className="flex gap-6 text-sm"
             >
-              {['Privacy Policy', 'Terms of Service', 'Shipping Info', 'Contact Us'].map((link, i) => (
+              {[
+                { name: 'Privacy Policy', url: '/privacy' },
+                { name: 'Terms of Service', url: '/terms' },
+                { name: 'Shipping Info', url: '/shipping' },
+                { name: 'Contact Us', url: '/contact' }
+              ].map((link, i) => (
                 <motion.a
                   key={i}
-                  href="#"
+                  href={link.url}
                   whileHover={{ y: -2 }}
                   className="text-white/60 hover:text-[#d4af37] transition"
                 >
-                  {link}
+                  {link.name}
                 </motion.a>
               ))}
             </motion.div>

@@ -34,6 +34,9 @@ function App() {
          <Route path='/spa-bookings' element={<SpaBookingPage />} />
          <Route path='/consultation' element={<ConsultationPage />} />
          <Route path='/reviews' element={<ReviewsPage />} />
+         <Route path='/privacy' element={<PrivacyPolicy />} />
+         <Route path='/terms' element={<TermsAndConditions />} />
+         <Route path='/shipping' element={<ShippingInfo />} />
          
         </Routes>
         <Footer />
@@ -49,5 +52,8 @@ import SustainabilityPage from './pages/Sustainability'
 import SpaBookingPage from './pages/SpaBookings'
 import ConsultationPage from './pages/Consultations'
 import ReviewsPage from './pages/Reviews'
+import PrivacyPolicy from './pages/PrivacyPolicy'
+import TermsAndConditions from './pages/TermsAndConditions'
+import ShippingInfo from './pages/ShippingInfo'
 
 export default App

@@ -11,27 +11,51 @@ const TeeNaturalAbout = () => {
   const values = [
     {
       icon: FaLeaf,
-      title: '100% Natural',
-      description: 'We use only organic, natural ingredients sourced sustainably from nature',
+      title: 'Purity',
+      description: 'We are committed to using clean, natural, and skin-loving ingredients. Every product is crafted with honesty and integrity, free from harmful chemicals or harsh additives.',
       color: 'from-green-500 to-green-600'
     },
     {
-      icon: FaShieldAlt,
-      title: 'Quality First',
-      description: 'Every product is carefully formulated and tested for safety and effectiveness',
+      icon: GiFlowerPot,
+      title: 'Nature First',
+      description: 'Herbs and botanicals are at the heart of our brand. We value the healing power of nature and honor traditional herbal knowledge in our formulations.',
+      color: 'from-emerald-500 to-emerald-600'
+    },
+    {
+      icon: FaAward,
+      title: 'Quality & Excellence',
+      description: 'We believe that skincare should deliver real results. Every product undergoes careful crafting, testing, and improvement to ensure high performance and customer satisfaction.',
       color: 'from-[#d4af37] to-[#b8941f]'
     },
     {
-      icon: FaRecycle,
-      title: 'Eco-Friendly',
-      description: 'Sustainable packaging and environmentally conscious practices in everything we do',
-      color: 'from-[#1a3a2e] to-[#2d5a47]'
+      icon: FaShieldAlt,
+      title: 'Transparency',
+      description: 'We value honesty. From ingredients to product benefits, we are open about what goes into our formulations and how they work for your skin.',
+      color: 'from-blue-500 to-blue-600'
+    },
+    {
+      icon: FaStar,
+      title: 'Affordability',
+      description: 'Everyone deserves access to quality skincare. We ensure that our products remain effective, premium, and still within reach for everyday users.',
+      color: 'from-amber-500 to-amber-600'
     },
     {
       icon: FaHeart,
-      title: 'Customer Care',
-      description: 'Your satisfaction and skin health are our top priorities',
+      title: 'Customer-Centered Care',
+      description: 'Our customers are the heart of our brand. We listen, learn, and improve based on their needs, ensuring every experience is positive.',
       color: 'from-pink-500 to-pink-600'
+    },
+    {
+      icon: FaUserFriends,
+      title: 'Education & Empowerment',
+      description: 'We aim to teach our community about natural skincare practices. Through knowledge, we empower individuals to make healthier, more confident choices for their skin.',
+      color: 'from-purple-500 to-purple-600'
+    },
+    {
+      icon: GiHealthNormal,
+      title: 'Consistency',
+      description: 'We remain consistent in our mission, our quality, and our dedication to natural beauty. Every product reflects our long-term commitment to excellence.',
+      color: 'from-[#1a3a2e] to-[#2d5a47]'
     }
   ];
 
@@ -45,10 +69,10 @@ const TeeNaturalAbout = () => {
 
   const team = [
     {
-      name: 'Ibrahim Fatimah ohunene',
-      role: 'Founder & CEO',
+      name: 'Ibrahim Fatimah Ohunene',
+      role: 'Founder & Creative Director',
       image: '/favicon.jpg',
-      description: 'Passionate about natural beauty and sustainable skincare'
+      description: 'Passionate mind behind Tee Naturals and Essentials, with deep-rooted knowledge of traditional herbal remedies and a dedication to creating gentle, effective skincare solutions that enhance natural beauty.'
     }
    
   ];
@@ -107,9 +131,10 @@ const TeeNaturalAbout = () => {
                 transition={{ delay: 0.6 }}
                 className="text-white/80 text-lg mb-6 leading-relaxed"
               >
-                Founded with a passion for natural beauty, Tee Natural & Essentials was born from a simple belief: 
-                that skincare should be as pure as nature intended. We combine traditional wisdom with modern science 
-                to create products that nurture your skin naturally.
+                Tee Naturals and Essentials is a proudly nature-inspired skincare and wellness brand dedicated to 
+                creating safe, effective, and high-quality products that enhance the skin's natural beauty. Built on 
+                the foundation of herbal knowledge and purity, we harness the power of nature to promote healthy, 
+                glowing, and well-nourished skin.
               </motion.p>
 
               <motion.p
@@ -118,8 +143,10 @@ const TeeNaturalAbout = () => {
                 transition={{ delay: 0.8 }}
                 className="text-white/70 text-base leading-relaxed"
               >
-                Every product we create is crafted with love, using only the finest organic ingredients. 
-                We're committed to sustainable practices that protect both your skin and our planet.
+                We believe that skincare should be simple, gentle, and rooted in nature. Our formulations are crafted 
+                using carefully selected herbs and skin-loving ingredients known for their healing, soothing, and 
+                revitalizing properties—delivering visible results while remaining safe for all skin types, especially 
+                melanin-rich skin.
               </motion.p>
             </motion.div>
 
@@ -166,6 +193,45 @@ const TeeNaturalAbout = () => {
         </div>
       </section>
 
+      {/* Brand Mission Section */}
+      <section className="py-20 px-6 bg-white">
+        <div className="max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-4xl md:text-5xl font-['Playfair_Display'] text-[#1a3a2e] mb-4">
+              Our <span className="text-[#d4af37]">Mission</span>
+            </h2>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="bg-gradient-to-br from-stone-50 to-stone-100 rounded-3xl p-8 md:p-12"
+          >
+            <p className="text-[#1a3a2e]/80 text-lg leading-relaxed mb-6">
+              Our journey began with a desire to offer skincare solutions that people can trust. Many individuals 
+              struggle with harsh chemical products that do more harm than good. Tee Naturals and Essentials was 
+              created to change that narrative by providing natural alternatives that are both effective and affordable.
+            </p>
+            <p className="text-[#1a3a2e]/80 text-lg leading-relaxed mb-6">
+              From exfoliating soaps and nourishing serums to hydrating gels and body essentials, every product 
+              reflects our unwavering commitment to nature-based skincare, transparency, handcrafted excellence, 
+              and customer satisfaction.
+            </p>
+            <p className="text-[#1a3a2e]/80 text-lg leading-relaxed">
+              As we continue to grow, our mission remains the same: <span className="font-bold text-[#d4af37]">to empower 
+              individuals to embrace their natural beauty through products inspired by the earth.</span> Tee Naturals and 
+              Essentials stands as a symbol of purity, wellness, and the endless possibilities of herbal skincare.
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
       {/* Stats Section */}
       <section className="py-20 px-6 bg-white">
         <div className="max-w-7xl mx-auto">
@@ -207,8 +273,9 @@ const TeeNaturalAbout = () => {
             <h2 className="text-4xl md:text-5xl font-['Playfair_Display'] text-[#1a3a2e] mb-4">
               Our <span className="text-[#d4af37]">Values</span>
             </h2>
-            <p className="text-[#1a3a2e]/70 max-w-2xl mx-auto">
-              Principles that guide everything we do
+            <p className="text-[#1a3a2e]/70 max-w-3xl mx-auto text-lg">
+              Our values guide every product we create and every decision we make. They reflect who we are, 
+              what we stand for, and the kind of impact we aim to make in the world of natural skincare.
             </p>
           </motion.div>
 
@@ -308,9 +375,9 @@ const TeeNaturalAbout = () => {
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-['Playfair_Display'] text-[#1a3a2e] mb-4">
-              Meet Our <span className="text-[#d4af37]">Team</span>
+              Meet Our <span className="text-[#d4af37]">Founder</span>
             </h2>
-            <p className="text-[#1a3a2e]/70">The passionate people behind our products</p>
+            <p className="text-[#1a3a2e]/70">The passionate mind behind our products</p>
           </motion.div>
 
           <div className="grid md:grid-cols-3 gap-8">
@@ -322,24 +389,48 @@ const TeeNaturalAbout = () => {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
                 whileHover={{ y: -10 }}
-                className="bg-white rounded-3xl shadow-lg overflow-hidden"
+                className="bg-white rounded-3xl shadow-lg overflow-hidden md:col-span-3 max-w-4xl mx-auto"
               >
-                <div className="relative aspect-square overflow-hidden">
-                  <motion.img
-                    whileHover={{ scale: 1.1 }}
-                    transition={{ duration: 0.4 }}
-                    src={member.image}
-                    alt={member.name}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#1a3a2e]/80 to-transparent" />
-                </div>
-                <div className="p-6">
-                  <h3 className="text-2xl font-['Playfair_Display'] text-[#1a3a2e] font-bold mb-1">
-                    {member.name}
-                  </h3>
-                  <div className="text-[#d4af37] font-semibold mb-3">{member.role}</div>
-                  <p className="text-[#1a3a2e]/70 text-sm">{member.description}</p>
+                <div className="grid md:grid-cols-5 gap-6">
+                  <div className="md:col-span-2 relative aspect-square md:aspect-auto overflow-hidden">
+                    <motion.img
+                      whileHover={{ scale: 1.1 }}
+                      transition={{ duration: 0.4 }}
+                      src={member.image}
+                      alt={member.name}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#1a3a2e]/80 to-transparent" />
+                  </div>
+                  <div className="md:col-span-3 p-6 md:p-8">
+                    <h3 className="text-3xl font-['Playfair_Display'] text-[#1a3a2e] font-bold mb-1">
+                      {member.name}
+                    </h3>
+                    <div className="text-[#d4af37] font-semibold mb-4 text-lg">{member.role}</div>
+                    <p className="text-[#1a3a2e]/70 text-sm leading-relaxed mb-3">
+                      Ibrahim Fatimah Ohunene is the passionate mind behind Tee Naturals and Essentials, 
+                      a skincare and wellness brand inspired by nature, purity, and the healing power of herbs. 
+                      With deep-rooted knowledge of traditional herbal remedies, Fatimah has dedicated her journey 
+                      to creating gentle, effective skincare solutions that enhance natural beauty.
+                    </p>
+                    <p className="text-[#1a3a2e]/70 text-sm leading-relaxed mb-3">
+                      Her love for herbal wellness began at a young age, shaped by her exposure to plants and 
+                      natural treatments. This curiosity grew into strong expertise—leading her to research, 
+                      study, and master the benefits of various herbs, giving Tee Naturals and Essentials 
+                      its authentic foundation.
+                    </p>
+                    <p className="text-[#1a3a2e]/70 text-sm leading-relaxed mb-3">
+                      Fatimah created Tee Naturals and Essentials to bridge the gap between quality natural 
+                      skincare and everyday accessibility. She believes everyone deserves safe, skin-loving 
+                      products without harsh chemicals. Each product is thoughtfully crafted using carefully 
+                      selected herbs designed to nourish, restore, and protect the skin.
+                    </p>
+                    <p className="text-[#1a3a2e]/70 text-sm leading-relaxed">
+                      As a founder, she remains committed to transparency, customer education, and continuous 
+                      improvement, using her platform to enlighten her community on natural skincare practices 
+                      that celebrate their skin's natural glow.
+                    </p>
+                  </div>
                 </div>
               </motion.div>
             ))}

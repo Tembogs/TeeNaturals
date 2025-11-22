@@ -250,6 +250,23 @@ const PRODUCTS = [
   image: "https://res.cloudinary.com/decgjhtlb/image/upload/v1763796521/Adult_Electric_ToothBrush_pyhg6b.jpg",
   description: "Rechargeable electric toothbrush for adults",
 },
+{
+  id: 30,
+  name: "Soft Body Towel",
+  price: 5500,
+  category: "ACCESSORIES",
+  image: "https://res.cloudinary.com/decgjhtlb/image/upload/v1763799238/soft_body_towel_rlyev5.jpg",
+  description: "Plush body towel for gentle drying",
+},
+{
+  id: 31,
+  name: "Products Basket",
+  price: 1200,
+  category: "ACCESSORIES",
+  image: "https://res.cloudinary.com/decgjhtlb/image/upload/v1763799239/Products_basket_zj5srn.jpg",
+  description: "Durable basket for organizing products",
+}
+
 
   
 ];
