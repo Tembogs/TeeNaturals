@@ -28,7 +28,7 @@ const SpaBookingPage = () => {
     {
       id: 1,
       name: "Facial Spa",
-      duration: "60 min",
+      duration: "2hrs",
       price: "₦25,000",
       description: "Luxurious facial treatment using natural organic ingredients",
       icon: <FaHeart />,
@@ -37,12 +37,22 @@ const SpaBookingPage = () => {
     {
       id: 2,
       name: "Full Body Spa",
-      duration: "90 min",
+      duration: "5hrs",
       price: "₦60,000",
       description: "Complete body treatment including massage, scrub, and relaxation",
       icon: <FaSpa />,
       color: "from-green-600 to-green-400"
+    },
+    {
+      id: 3,
+      name: "Bridal Wash",
+      duration: "half a day",
+      price: "₦55,000",
+      description: "Luxurious bridal spa treatment for the special day",
+      icon: <FaCheckCircle />,
+      color: "from-purple-600 to-purple-400"
     }
+
   ];
 
   const availableTimes = [
