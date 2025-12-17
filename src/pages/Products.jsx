@@ -265,7 +265,32 @@ const PRODUCTS = [
   category: "ACCESSORIES",
   image: "https://res.cloudinary.com/decgjhtlb/image/upload/v1763799239/Products_basket_zj5srn.jpg",
   description: "Durable basket for organizing products",
+},
+{
+  id: 32,
+  name: "Baby Skincare Products",
+  price: 40000,
+  category: "BABYCARE",
+  image: "https://res.cloudinary.com/decgjhtlb/image/upload/v1765969669/baby_skincare_products_jlh9wq.jpg",
+  description: "Complete set of baby skincare products",
+},
+{
+  id: 33,
+  name: "Berry Body Butter",
+  price: 7000,
+  category: "SKINCARE",
+  image: "https://res.cloudinary.com/decgjhtlb/image/upload/v1765969667/berry_body_butter_rallxz.jpg",
+  description: "Rich body butter with berry extracts",
+},
+{
+  id: 34,
+  name: "Exfoliating Shower Gel",
+  price: 6500,
+  category: "SKINCARE",
+  image: "https://res.cloudinary.com/decgjhtlb/image/upload/v1765969668/exfoliating_shower_gel_snbhuj.jpg",
+  description: "Gentle exfoliating shower gel for smooth skin", 
 }
+
 
 
   
