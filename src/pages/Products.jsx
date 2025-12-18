@@ -289,6 +289,30 @@ const PRODUCTS = [
   category: "SKINCARE",
   image: "https://res.cloudinary.com/decgjhtlb/image/upload/v1765969668/exfoliating_shower_gel_snbhuj.jpg",
   description: "Gentle exfoliating shower gel for smooth skin", 
+},
+{
+  id: 35,
+  name: "Lightening Body Kit",
+  price: 35000,
+  category: "SKINCARE",
+  image: "https://res.cloudinary.com/decgjhtlb/image/upload/v1765996138/Lightning_body_kit_mgooqa.jpg",
+  description: "Complete body lightening kit for radiant skin",
+},
+{
+  id: 36,
+  name: " Caramel Body Kit",
+  price: 25000,
+  category: "SKINCARE",
+  image: "https://res.cloudinary.com/decgjhtlb/image/upload/v1765996138/Caramel_Body_Kit_xassvw.jpg",
+  description: "Nourishing caramel body kit for smooth skin",
+},
+{
+  id: 37,
+  name: "Dry Skin Treatment Kit",
+  price: 23000,
+  category: "SKINCARE",
+  image: "https://res.cloudinary.com/decgjhtlb/image/upload/v1765996140/Dry_Skin_Treatment_n9ejjt.jpg",
+  description: "Effective treatment kit for dry skin",
 }
 
 

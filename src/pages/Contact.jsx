@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { FaWhatsapp, FaEnvelope, FaPhone, FaMapMarkerAlt, FaInstagram, FaFacebook, FaTwitter, FaPaperPlane, FaLeaf, FaClock, FaCheckCircle } from 'react-icons/fa';
+import { FaWhatsapp, FaEnvelope, FaPhone, FaMapMarkerAlt, FaInstagram, FaFacebook, FaTwitter, FaPaperPlane, FaLeaf, FaClock, FaCheckCircle, FaTiktok } from 'react-icons/fa';
 
 const TeeNaturalContact = () => {
   const [formData, setFormData] = useState({
@@ -324,9 +324,9 @@ const TeeNaturalContact = () => {
               </h3>
               <div className="flex gap-4">
                 {[
-                  { icon: FaInstagram, link: '#', color: 'from-purple-500 to-pink-500' },
-                  { icon: FaFacebook, link: '#', color: 'from-blue-500 to-blue-600' },
-                  { icon: FaTwitter, link: '#', color: 'from-blue-400 to-blue-500' }
+                  { icon: FaInstagram, link: 'https://instagram.com', color: 'from-purple-500 to-pink-500' },
+                  { icon: FaFacebook, link: 'https://www.facebook.com/share/1ANusU1xvj/', color: 'from-blue-500 to-blue-600' },
+                  { icon: FaTiktok, link: 'https://www.tiktok.com/@teenaturals4?_r=1&_t=ZS-91SMH6V0VPQ', color: 'from-black-800 to-red-500'},
                 ].map((social, i) => (
                   <motion.a
                     key={i}
