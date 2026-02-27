@@ -1,18 +1,3 @@
-/**
- * TeeNaturalLanding.jsx — Fixed & SEO-Optimised
- *
- * Fixes applied:
- * 1. BLANK SPACE BUG: Wrapped everything in a root div with overflow-x-hidden.
- *    The blobs use negative absolute offsets (-right-16 etc.) which escape the
- *    <main> clip boundary. Adding overflow-x-hidden at the ROOT div level (not
- *    just <main>) stops the browser from counting those elements in page width.
- * 2. PERFORMANCE: All illustration components wrapped in React.memo() to prevent
- *    unnecessary re-renders. SEOHead now uses a single useEffect with a stable
- *    ref guard. useScroll hero parallax debounced via CSS will-change hint.
- * 3. SEO: Structured data (JSON-LD), canonical link, Open Graph image, Twitter
- *    Card meta, hreflang, preconnect font hints, and semantic aria-labels added.
- */
-
 import React, { useRef, useEffect, memo } from "react";
 import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import { FaLeaf, FaHeart, FaStar, FaShoppingBag, FaArrowRight, FaCheckCircle } from "react-icons/fa";
@@ -26,22 +11,13 @@ const TOKEN = {
   clayShadow: "0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.85)",
 };
 
-// ── SEO HEAD ─────────────────────────────────────────────────────────────────
-// Changes from original:
-// • Added JSON-LD structured data (Organization + Product schema) — helps Google
-//   show rich results (star ratings, brand info) in search listings
-// • Added og:image and twitter:card — social shares now show a preview image
-// • Added canonical <link> — prevents duplicate-URL penalties
-// • Added preconnect hints for Google Fonts — cuts font load time ~200ms
-// • Added hreflang="en" — signals language to search engines
-// • robots "index,follow" retained
 const SEOHead = () => {
   const initialised = useRef(false);
   useEffect(() => {
     if (initialised.current) return;
     initialised.current = true;
 
-    document.title = "TeeNatural | 100% Natural Skincare & Haircare — Free from Harsh Chemicals";
+    document.title = "TeeNatural | 100% Natural Skincare & Haircare — Pure Beauty, From Nature";
     document.documentElement.lang = "en";
 
     const setMeta = (attr, key, content) => {
@@ -155,11 +131,7 @@ const ClayCard = ({ children, className = "" }) => (
     style={{ boxShadow: TOKEN.clayShadow }}>{children}</div>
 );
 
-// FIX: Blob positions are constrained so they don't exceed the viewport edge.
-// Previously blobs used e.g. "-right-16" which extended outside <main>, and
-// since overflow-x-hidden was only on <main> (not the scroll container) the
-// browser still reserved that width — creating blank horizontal space.
-// Now blobs are clipped by the root wrapper's overflow-x-hidden.
+
 const Blob = ({ className }) => (
   <motion.div className={`absolute rounded-full blur-3xl pointer-events-none ${className}`}
     animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.85, 0.5] }}
@@ -177,9 +149,6 @@ const SectionHeading = ({ tag, title, highlight, subtitle, light = false }) => (
   </div>
 );
 
-// ── ILLUSTRATIONS — all wrapped in React.memo() ───────────────────────────────
-// memo() prevents React from re-rendering these heavy SVGs on every parent
-// state change or scroll event, significantly cutting CPU work during scroll.
 
 const IllustrationHero = memo(() => {
   const arm = { animate: { translateX:[0,-8,-14,-10,-6,0], translateY:[0,-12,-18,-14,-8,0], rotate:[0,4,8,4,2,0], transition:{duration:2.8,repeat:Infinity,repeatDelay:1.2,ease:"easeInOut",times:[0,.2,.45,.65,.82,1]}}};
@@ -390,8 +359,8 @@ const FEATURES = [
   { Illustration: IllustrationHeart,  title: "For Everyone",   desc: "Formulated for all skin types and ages, from teenagers to mature skin." },
 ];
 const INGREDIENTS = [
-  {style:"aloe",   name:"Aloe Vera",   benefit:"Soothes & hydrates"},
-  {style:"coconut",name:"Coconut Oil", benefit:"Nourishes & repairs"},
+  {style:"aloe",   name:"Herbs",   benefit:"Soothes & hydrates"},
+  {style:"coconut",name:"Natural Essential Oil", benefit:"Nourishes & repairs"},
   {style:"shea",   name:"Shea Butter", benefit:"Moisturises deeply"},
   {style:"tea",    name:"Green Tea",   benefit:"Antioxidant protection"},
 ];
@@ -407,7 +376,7 @@ const TESTIMONIALS = [
   {name:"Samia Owolewa",      product:"Skincare Essentials",  date:"January 2024",  verified:true, text:"Asalamualaikum warahmatullahi ma I am happy to be one of tee queens ooo💃💃 In less than two weeks there is already significant changes on my skin, my hyperpigmentation is clearing and my pores are reducing too."},
 ];
 const STATS = [
-  {value:"10K+",label:"Happy Customers"},
+  {value:"5K+",label:"Happy Customers"},
   {value:"100%",label:"Natural Ingredients"},
   {value:"0%",  label:"Harsh Chemicals"},
   {value:"4.9★",label:"Average Rating"},
@@ -423,21 +392,14 @@ const TeeNaturalLanding = () => {
   return (
     <>
       <SEOHead />
-      {/*
-        ROOT FIX: overflow-x-hidden must be on the outermost wrapper.
-        Previously it was only on <main> — but the browser calculates scroll
-        width from the document root, so blobs positioned outside <main>
-        (e.g. -right-16) still created horizontal scroll / blank space.
-        Putting overflow-x-hidden here clips everything at the page level.
-      */}
+      
       <div style={{ overflowX: "hidden", maxWidth: "100vw", position: "relative" }}>
         <main className="min-h-screen bg-stone-50" style={{ fontFamily: TOKEN.fontBody }}>
 
           {/* ══ HERO ═══════════════════════════════════════════════════════ */}
           <section className="relative min-h-[100svh] bg-gradient-to-br from-[#1a3a2e] via-[#2d5a47] to-[#1a3a2e] overflow-hidden"
             aria-label="Hero — 100% Natural Skincare for Everyone">
-            {/* Blobs kept inside their section's overflow:hidden so they're
-                safe even without the root wrapper — double protection */}
+         
             <Blob className="w-56 sm:w-80 md:w-[450px] h-56 sm:h-80 md:h-[450px] bg-[#d4af37]/12 -top-16 -right-16"/>
             <Blob className="w-44 sm:w-64 md:w-[350px] h-44 sm:h-64 md:h-[350px] bg-white/5 -bottom-12 -left-12"/>
             <div className="absolute inset-0 opacity-[0.05]"
@@ -464,7 +426,7 @@ const TeeNaturalLanding = () => {
                       <div className="text-[10px] text-[#1a3a2e]/50 font-medium mb-1">Key Ingredient</div>
                       <div className="flex items-center gap-1.5">
                         <span className="text-[#d4af37]">🌿</span>
-                        <span className="text-xs font-bold text-[#1a3a2e]">Aloe Vera Extract</span>
+                        <span className="text-xs font-bold text-[#1a3a2e]">Natural Essential Oils</span>
                       </div>
                     </div>
                   </motion.div>
@@ -475,7 +437,7 @@ const TeeNaturalLanding = () => {
                       style={{boxShadow:TOKEN.clayShadow}}>
                       <div className="text-[10px] text-[#1a3a2e]/50 font-medium mb-1">Customer Rating</div>
                       <div className="flex gap-0.5 mb-1">{[...Array(5)].map((_,i)=><FaStar key={i} className="text-[#d4af37] text-xs"/>)}</div>
-                      <div className="text-[10px] text-[#1a3a2e]/55">4.9 · 10,000+ reviews</div>
+                      <div className="text-[10px] text-[#1a3a2e]/55">4.9 · 5000+ reviews</div>
                     </div>
                   </motion.div>
 
@@ -512,7 +474,7 @@ const TeeNaturalLanding = () => {
                   <motion.p initial={{opacity:0}} animate={{opacity:1}} transition={{delay:.5}}
                     className="text-white/72 text-sm sm:text-base md:text-lg mb-6 sm:mb-9 max-w-sm sm:max-w-md leading-relaxed mx-auto md:mx-0">
                     Keep your skin healthy and young looking with our 100% natural,
-                    gently crafted products — free from harsh chemicals.
+                    gently crafted products, free from harsh chemicals.
                   </motion.p>
 
                   <motion.div initial={{opacity:0,y:16}} animate={{opacity:1,y:0}} transition={{delay:.65}}
@@ -535,7 +497,7 @@ const TeeNaturalLanding = () => {
 
                   <motion.div initial={{opacity:0}} animate={{opacity:1}} transition={{delay:.85}}
                     className="flex gap-6 sm:gap-10 justify-center md:justify-start">
-                    {[{n:"10K+",l:"Customers"},{n:"100%",l:"Natural"},{n:"4.9★",l:"Rating"}].map((s,i)=>(
+                    {[{n:"5K+",l:"Customers"},{n:"100%",l:"Natural"},{n:"4.9★",l:"Rating"}].map((s,i)=>(
                       <div key={i}>
                         <div style={{fontFamily:TOKEN.fontDisplay}} className="text-lg sm:text-2xl font-bold text-[#d4af37]">{s.n}</div>
                         <div className="text-[10px] sm:text-xs text-white/55 mt-0.5">{s.l}</div>
@@ -600,7 +562,7 @@ const TeeNaturalLanding = () => {
                 <h2 style={{fontFamily:TOKEN.fontDisplay}} className="text-3xl sm:text-4xl md:text-5xl text-white font-bold leading-tight mb-4 sm:mb-6">
                   Rooted in Nature,<br/><span className="text-[#d4af37]">Backed by Results</span>
                 </h2>
-                <p className="text-white/65 mb-3 sm:mb-5 leading-relaxed text-sm sm:text-base md:text-lg">Every TeeNatural product is formulated with the finest natural botanicals — chosen for their proven skin and hair benefits.</p>
+                <p className="text-white/65 mb-3 sm:mb-5 leading-relaxed text-sm sm:text-base md:text-lg">Every TeeNatural product is formulated with the finest natural botanicals, chosen for their proven skin and hair benefits.</p>
                 <p className="text-white/50 mb-6 sm:mb-10 leading-relaxed text-xs sm:text-sm">No parabens. No sulphates. No artificial fragrances. Just pure, effective ingredients your skin will love.</p>
                 <div className="flex flex-wrap gap-2 sm:gap-3">
                   {INGREDIENTS.map((ing,i)=>(
@@ -662,7 +624,7 @@ const TeeNaturalLanding = () => {
           {/* ══ HOW IT WORKS ════════════════════════════════════════════════ */}
           <section className="py-14 sm:py-20 md:py-24 px-4 sm:px-6 bg-stone-50" aria-label="How to use TeeNatural">
             <div className="max-w-5xl mx-auto">
-              <FadeUp><SectionHeading tag="Simple Routine" title="Your Daily" highlight="Ritual" subtitle="Three easy steps to glowing, healthy skin every single day."/></FadeUp>
+              <FadeUp><SectionHeading tag="Simple Routine" title="Your Daily" highlight="Routine" subtitle="Three easy steps to glowing, healthy skin every single day."/></FadeUp>
               <div className="grid sm:grid-cols-3 gap-4 sm:gap-5 md:gap-8 relative">
                 <div className="hidden sm:block absolute top-9 md:top-11 left-[18%] right-[18%] h-px border-t-2 border-dashed border-[#d4af37]/40 z-0"/>
                 {STEPS.map((step,i)=>(
