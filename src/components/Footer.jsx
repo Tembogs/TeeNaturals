@@ -215,7 +215,7 @@ const Footer = () => {
           <p className="text-white/35 text-xs text-center sm:text-left">
             © {new Date().getFullYear()} Tee Natural & Essentials. All rights reserved.
             <span className="mx-2 text-white/20">·</span>
-            Made with <FaHeart className="inline text-[#d4af37] text-[9px] mx-0.5" /> in Nigeria
+            Made with <FaHeart className="inline text-[#1156e1] text-[9px] mx-0.5" /> by MD Codes
           </p>
 
           {/* Legal links — wrap on small screens */}
