@@ -1,37 +1,4 @@
-/**
- * TeeNaturalNavbar.jsx
- *
- * THREE STATES — auto-detected from localStorage token + /api/auth/profile:
- *
- *  ① GUEST  (no token)
- *     Dark green bar | About, Reviews, Contact, Consultation, Spa Bookings | Dashboard btn | Shop Now
- *
- *  ② USER   (role === "user")
- *     Same dark green bar | Same links | Shows logged-in name | Shop Now gold btn | Avatar dropdown
- *     Dropdown → My Dashboard, My Profile, Sign out
- *
- *  ③ ADMIN  (role === "admin")
- *     Darker charcoal-green bar | Overview, Products, Orders, Users | Admin badge | Avatar dropdown
- *     Dropdown → Settings, Sign out
- *     No Shop Now button.
- *
- * EXPORTS:
- *   default → TeeNaturalNavbar
- *   named   → NavSpacer   (drop once in your layout to prevent hero overlap)
- *
- * USAGE in App.jsx / Layout.jsx:
- *   import TeeNaturalNavbar, { NavSpacer } from './components/TeeNaturalNavbar';
- *
- *   function Layout({ children }) {
- *     return (
- *       <>
- *         <TeeNaturalNavbar />
- *         <NavSpacer />
- *         {children}
- *       </>
- *     );
- *   }
- */
+
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -40,9 +7,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import axios from "axios";
 
-// ─────────────────────────────────────────────────────────────────────────────
-// AXIOS INSTANCE
-// ─────────────────────────────────────────────────────────────────────────────
+
 const api = axios.create({ baseURL: "http://localhost:3000/api" });
 api.interceptors.request.use((cfg) => {
   const token = localStorage.getItem("tn_token");
@@ -50,9 +15,7 @@ api.interceptors.request.use((cfg) => {
   return cfg;
 });
 
-// ─────────────────────────────────────────────────────────────────────────────
-// DESIGN TOKENS
-// ─────────────────────────────────────────────────────────────────────────────
+
 const T = {
   green:       "#1a3a2e",
   greenMid:    "#2d5a47",
@@ -63,16 +26,12 @@ const T = {
   fontBody:    "'Plus Jakarta Sans', sans-serif",
 };
 
-// ─────────────────────────────────────────────────────────────────────────────
-// NAV SPACER — export, use once in layout
-// ─────────────────────────────────────────────────────────────────────────────
 export const NavSpacer = () => (
   <div aria-hidden="true" style={{ height: "72px", flexShrink: 0 }} />
 );
 
-// ─────────────────────────────────────────────────────────────────────────────
-// PUBLIC NAV LINKS (guest + user)
-// ─────────────────────────────────────────────────────────────────────────────
+ 
+
 const NAV_LINKS = [
   {
     name: "About",
@@ -132,19 +91,14 @@ const NAV_LINKS = [
   },
 ];
 
-// ─────────────────────────────────────────────────────────────────────────────
-// ADMIN NAV LINKS
-// ─────────────────────────────────────────────────────────────────────────────
+
 const ADMIN_LINKS = [
   { name: "Overview", href: "/admin",          icon: "◈" },
-  { name: "Products", href: "/admin/products",  icon: "🌿" },
-  { name: "Orders",   href: "/admin/orders",    icon: "📦" },
-  { name: "Users",    href: "/admin/users",     icon: "👥" },
+  // { name: "Products", href: "/admin/products",  icon: "🌿" },
+  // { name: "Orders",   href: "/admin/orders",    icon: "📦" },
+  // { name: "Users",    href: "/admin/users",     icon: "👥" },
 ];
 
-// ─────────────────────────────────────────────────────────────────────────────
-// SVG DECORATIONS (unchanged from original)
-// ─────────────────────────────────────────────────────────────────────────────
 const LogoLeafLeft = () => (
   <svg viewBox="0 0 32 40" fill="none" className="w-5 h-7 flex-shrink-0" aria-hidden="true">
     <path d="M16 38 Q16 20 8 10 Q4 5 10 2 Q18 5 20 18 Q22 28 16 38Z" fill="#4a9a6b" />
@@ -265,13 +219,18 @@ const ChevronSvg = ({ open }) => (
 const UserDropdown = ({ profile, onLogout }) => {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
+  const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
 
   useEffect(() => { setOpen(false); }, [location.pathname]);
   useEffect(() => {
+    const handleScroll = () => { setScrolled(window.scrollY > 20);
+      setScrolled(window.scrollY > 20);
     const h = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
     document.addEventListener("mousedown", h);
-    return () => document.removeEventListener("mousedown", h);
+     };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const firstName = profile?.name?.split(" ")[0] || "Account";
@@ -725,9 +684,7 @@ const AdminMobileDrawer = ({ open, onClose, profile, onLogout }) => {
   );
 };
 
-// ─────────────────────────────────────────────────────────────────────────────
-// ROOT NAVBAR — auto-switches between Guest / User / Admin
-// ─────────────────────────────────────────────────────────────────────────────
+
 const TeeNaturalNavbar = () => {
   const navigate  = useNavigate();
   const location  = useLocation();
@@ -739,9 +696,10 @@ const TeeNaturalNavbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
+
   // scroll effect
   useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 50);
+    const fn = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", fn, { passive: true });
     return () => window.removeEventListener("scroll", fn);
   }, []);
@@ -778,7 +736,6 @@ const TeeNaturalNavbar = () => {
 
   const isActive = (href) => location.pathname === href;
 
-  // ── ADMIN NAVBAR ─────────────────────────────────────────────────────────
   if (!loading && isAdmin) {
     return (
       <>
@@ -800,7 +757,7 @@ const TeeNaturalNavbar = () => {
 
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-6">
             {/* Logo */}
-            <NavLogo to="/admin" />
+            <NavLogo to="/" />
 
             {/* Separator */}
             <div className="hidden lg:block w-px h-5 bg-white/12 flex-shrink-0" />
@@ -875,7 +832,6 @@ const TeeNaturalNavbar = () => {
     );
   }
 
-  // ── GUEST + USER NAVBAR ────────────────────────────────────────────────────
   return (
     <>
       <motion.nav
@@ -883,9 +839,9 @@ const TeeNaturalNavbar = () => {
         transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
         aria-label="Main navigation"
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          scrolled
+          scrolled 
             ? "bg-[#1a3a2e]/98 backdrop-blur-xl shadow-[0_4px_32px_rgba(0,0,0,0.3)] py-2"
-            : "bg-[#1a3a2e]/92 backdrop-blur-md py-3"
+            : "bg-transparent py-3"
         }`}
         style={{ fontFamily: T.fontBody }}>
 

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // DESIGN TOKENS — Dark SaaS theme with TeeNatural gold accent
@@ -146,6 +147,9 @@ const Btn = ({ children, onClick, variant="primary", size="md", disabled=false, 
   );
 };
 
+
+
+
 const Input = ({ label, value, onChange, type="text", placeholder="", required=false, min, step }) => (
   <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
     {label && <label style={{ fontFamily:T.fontBody, fontSize:12, fontWeight:700,
@@ -239,6 +243,7 @@ const Confirm = ({ open, title, sub, onConfirm, onCancel }) => (
 // NAV CONFIG
 // ─────────────────────────────────────────────────────────────────────────────
 const NAV = [
+  { id:"home",  icon:"🏠",  label:"Home"  },
   { id:"overview",  icon:"◈",  label:"Overview"  },
   { id:"products",  icon:"🌿", label:"Products"  },
   { id:"orders",    icon:"📦", label:"Orders"    },
@@ -394,7 +399,7 @@ const Topbar = ({ active, profile, onLogout, onMenu }) => {
           boxShadow:`0 2px 8px rgba(212,175,55,0.4)` }}>
           {profile?.name?.[0]?.toUpperCase()||"A"}
         </div>
-        <Btn size="sm" danger onClick={onLogout}>Logout</Btn>
+        {/* <Btn size="sm" danger onClick={onLogout}>Logout</Btn> */}
       </div>
     </header>
   );
@@ -495,7 +500,73 @@ const SectionProducts = ({ toast }) => {
   const [form, setForm]         = useState(PRODUCT_DEFAULTS);
   const [editId, setEditId]     = useState(null);
   const [delTarget, setDelTarget] = useState(null);
+  const [user, setUser] = useState(null);
+  const fileInputRef = useRef(null);
+useEffect(() => {
+  const fetchUser = async () => {
+    try {
+      const res = await api.get("/auth/profile");
+      setUser(res.data);
+    } catch (err) {
+      console.error("Error fetching user:", err);
+    }
+  };
+  fetchUser();
+}, []);
 
+const uploadAvatar = async (file) => {
+   
+  if (!file) {
+    toast.error("No image selected");
+    return null;
+  }
+
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET);
+
+  try {
+    // 1️⃣ Upload to Cloudinary
+    const res = await axios.post(
+      `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/image/upload`,
+      formData
+    );
+
+    const imageUrl = res.data.secure_url;
+    console.log("Image URL:", imageUrl);
+    setForm((prev) => ({
+  ...prev,
+  image: imageUrl,
+}));
+    // toast.success("Image uploaded successfully 🖼️");
+
+    // toast.success("Profile picture updated!");
+    return imageUrl;
+
+  } catch (err) {
+    console.error("Upload error:", err);
+    // toast.error("Image upload failed 😢");
+    return null;
+  }
+};
+useEffect(() => {
+  console.log("form.image:", form.image);
+}, [form.image]);
+
+const handleFileChange = async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+console.log("Selected file:", file);
+  const imageUrl = await uploadAvatar(file);
+   console.log("Cloudinary URL:", imageUrl);
+
+  if (imageUrl) {
+    setForm((prev) => ({
+      ...prev,
+      image: imageUrl,
+    }));
+  }
+};
   const load = useCallback(()=>{
     setLoading(true);
     api.get("/products")
@@ -537,6 +608,7 @@ const SectionProducts = ({ toast }) => {
 
   const filtered = products.filter(p=>p.name?.toLowerCase().includes(search.toLowerCase()));
 
+  
   return (
     <div style={{ display:"flex", flexDirection:"column", gap:18 }}>
       {/* Toolbar */}
@@ -627,11 +699,49 @@ const SectionProducts = ({ toast }) => {
               onChange={v=>setForm(f=>({...f,price:v}))} required />
           </div>
           <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:14 }}>
-            <Input label="Category" value={form.category} onChange={v=>setForm(f=>({...f,category:v}))} />
+            {/* <Input label="Category" value={form.category} onChange={v=>setForm(f=>({...f,category:v}))} /> */}
             <Input label="Stock Qty" type="number" min="0" value={form.countInStock}
               onChange={v=>setForm(f=>({...f,countInStock:v}))} />
           </div>
-          <Input label="Image URL" value={form.image} onChange={v=>setForm(f=>({...f,image:v}))} placeholder="https://…" />
+          {/* <Input label="Upload Image" value={form.image} onChange={v=>setForm(f=>({...f,image:v}))} placeholder="https://…" /> */}
+          <input
+              ref={fileInputRef}
+              label="Upload Image"
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              style={{
+                padding: "9px 13px",
+                borderRadius: 10,
+                border: `1px solid ${T.border}`,
+                background: T.bg,
+                color: T.textPri,
+                fontFamily: T.fontBody,
+                fontSize: 14,
+                outline: "none",
+              }}
+            />
+            {form.image && (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  marginTop: 10,
+                }}
+              >
+                <img
+                  src={form.image}
+                  alt="Product Preview"
+                  style={{
+                    width: 120,
+                    height: 120,
+                    objectFit: "cover",
+                    borderRadius: 12,
+                    border: `1px solid ${T.border}`,
+                  }}
+                />
+              </div>
+            )}
           <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
             <label style={{ fontFamily:T.fontBody,fontSize:12,fontWeight:700,
               color:T.textSec,letterSpacing:"0.06em",textTransform:"uppercase" }}>Description</label>
@@ -960,6 +1070,15 @@ const SectionSettings = ({ profile }) => (
   </div>
 );
 
+const SectionHome = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    navigate("/")
+  }, [navigate])
+
+};
+
 // ─────────────────────────────────────────────────────────────────────────────
 // ROOT: ADMIN DASHBOARD
 // ─────────────────────────────────────────────────────────────────────────────
@@ -1012,6 +1131,7 @@ const AdminDashboard = () => {
 
   const renderSection = () => {
     switch(active){
+      case "home":      return <SectionHome />;
       case "overview":  return <SectionOverview stats={stats} orders={orders} setActive={setActive} />;
       case "products":  return <SectionProducts toast={toast} />;
       case "orders":    return <SectionOrders toast={toast} />;

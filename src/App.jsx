@@ -25,43 +25,42 @@ import ShippingInfo from './pages/ShippingInfo'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import AdminDashboard from './pages/AdminDashboard'
+import MainLayout from './layout';
+
 
 
 function App() {
-  
-
   return (
-    <>
-      <BrowserRouter>
-      
-      <Navbar />
-        <Routes>
-         <Route path='/' element={< Home/>} />
-         <Route path='/admin' element={< AdminDashboard/>} />
-         <Route path='/dashboard' element={< Dashboard/>} />
-         <Route path='/products' element={< TeeNaturalProductsWithProvider />} />
-         <Route path='/cart' element={<Cart />} />
-         <Route path='/about' element={<TeeNaturalAbout />} />
-         <Route path='/contact' element={<TeeNaturalContact />} />
-         <Route path='/register' element={<Register />} />
-         <Route path='/login' element={<Login />} />
-         <Route path="*" element={<NotFound />} />
-         <Route path='/learn-more' element={<LearnMore />} />
-         <Route path='/sustainability' element={<SustainabilityPage />} />
-         <Route path='/spa-bookings' element={<SpaBookingPage />} />
-         <Route path='/consultation' element={<ConsultationPage />} />
-         <Route path='/reviews' element={<ReviewsPage />} />
-         <Route path='/privacy' element={<PrivacyPolicy />} />
-         <Route path='/terms' element={<TermsAndConditions />} />
-         <Route path='/shipping' element={<ShippingInfo />} />
-         
-        </Routes>
-        <Footer />
-      
-      </BrowserRouter>
-    
-    </>
-  )
+    <BrowserRouter>
+      <Routes>
+
+        {/* Routes with Navbar and Footer */}
+        <Route element={<MainLayout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/products" element={<TeeNaturalProductsWithProvider />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/about" element={<TeeNaturalAbout />} />
+          <Route path="/contact" element={<TeeNaturalContact />} />
+          <Route path="/learn-more" element={<LearnMore />} />
+          <Route path="/sustainability" element={<SustainabilityPage />} />
+          <Route path="/spa-bookings" element={<SpaBookingPage />} />
+          <Route path="/consultation" element={<ConsultationPage />} />
+          <Route path="/reviews" element={<ReviewsPage />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/terms" element={<TermsAndConditions />} />
+          <Route path="/shipping" element={<ShippingInfo />} />
+        </Route>
+
+        {/* Routes without Navbar and Footer */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/admin" element={<AdminDashboard />} />
+
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 
