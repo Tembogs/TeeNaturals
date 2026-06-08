@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Home from "./Home";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // DESIGN TOKENS — TeeNatural brand
@@ -145,6 +146,7 @@ const StatCard = ({ icon, label, value, sub, delay = 0 }) => (
 // NAV ITEMS
 // ─────────────────────────────────────────────────────────────────────────────
 const NAV = [
+    { id: "home", icon: "🏠",  label: "Home"  },
   { id: "dashboard", icon: "◈",  label: "Dashboard"  },
   { id: "profile",   icon: "✦",  label: "Profile"    },
   { id: "orders",    icon: "📦", label: "Orders"     },
@@ -156,29 +158,44 @@ const NAV = [
 // ─────────────────────────────────────────────────────────────────────────────
 const Sidebar = ({ active, setActive, user, onLogout, mobileOpen, setMobileOpen }) => {
   const inner = (
-    <div style={{ display: "flex", flexDirection: "column", height: "100%", padding: "28px 0" }}>
+    <div className="flex flex-col h-screen py-7">
       {/* Logo */}
       <div style={{ padding: "0 24px 28px", borderBottom: `1px solid ${T.border}` }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <div style={{
-            width: 38, height: 38, borderRadius: 12,
-            background: `linear-gradient(135deg, ${T.gold}, ${T.goldLight})`,
-            display: "flex", alignItems: "center", justifyContent: "center",
-            fontSize: 18, boxShadow: `0 4px 12px rgba(212,175,55,0.35)`,
-          }}>🌿</div>
-          <div>
-            <div style={{ fontFamily: T.fontDisplay, fontSize: 17, fontWeight: 700, color: T.green }}>TeeNatural</div>
-            <div style={{ fontFamily: T.fontBody, fontSize: 10, color: T.muted, letterSpacing: "0.06em", textTransform: "uppercase" }}>Dashboard</div>
+       {user && (
+          <div className="flex items-center gap-2.5">
+            <div
+              className="w-9 h-9 rounded-full flex items-center justify-center text-[15px] font-bold shadow-[0_2px_8px_rgba(26,58,46,0.2)]"
+              style={{
+                background: `linear-gradient(135deg, ${T.green}, ${T.greenMid})`,
+                color: T.goldLight,
+                fontFamily: T.fontDisplay,
+              }}
+            >
+              {user.name?.[0]?.toUpperCase() || "U"}
+            </div>
+            <div className=" text-right block">
+              <div
+                className="text-[13px] font-bold whitespace-nowrap overflow-hidden text-ellipsis"
+              >
+                {user.name}
+              </div>
+
+              <div
+                className="text-[11px] mx-2 whitespace-nowrap overflow-hidden text-ellipsis"
+              >
+                {user.role === "admin" ? "Administrator" : "Customer"}
+              </div>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Nav */}
       <nav style={{ flex: 1, padding: "20px 12px", display: "flex", flexDirection: "column", gap: 2 }}>
-        <div style={{ fontFamily: T.fontBody, fontSize: 10, fontWeight: 700, letterSpacing: "0.1em",
+        {/* <div style={{ fontFamily: T.fontBody, fontSize: 10, fontWeight: 700, letterSpacing: "0.1em",
           textTransform: "uppercase", color: T.muted, padding: "0 12px", marginBottom: 8 }}>
           Navigation
-        </div>
+        </div> */}
         {NAV.map(item => {
           const isActive = active === item.id;
           return (
@@ -313,10 +330,11 @@ const Sidebar = ({ active, setActive, user, onLogout, mobileOpen, setMobileOpen 
 // ─────────────────────────────────────────────────────────────────────────────
 const Topbar = ({ active, user, onLogout, onMenuClick }) => {
   const pageTitle = NAV.find(n => n.id === active)?.label || "Dashboard";
+  
   return (
     <header style={{
       height: 64, background: T.surface, borderBottom: `1px solid ${T.border}`,
-      display: "flex", alignItems: "center", justifyContent: "space-between",
+      display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 10,
       padding: "0 24px", position: "sticky", top: 0, zIndex: 30,
       boxShadow: "0 1px 0 rgba(26,58,46,0.06)",
     }}>
@@ -338,34 +356,33 @@ const Topbar = ({ active, user, onLogout, onMenuClick }) => {
         </div>
       </div>
 
-      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-        {user && (
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <div style={{ textAlign: "right", display: "none" }} className="tn-username-block">
-              <div style={{ fontFamily: T.fontBody, fontSize: 13, fontWeight: 700, color: T.green }}>{user.name}</div>
-              <div style={{ fontFamily: T.fontBody, fontSize: 11, color: T.muted }}>{user.role}</div>
-            </div>
-            <div style={{
-              width: 36, height: 36, borderRadius: "50%",
-              background: `linear-gradient(135deg, ${T.green}, ${T.greenMid})`,
-              display: "flex", alignItems: "center", justifyContent: "center",
-              color: T.goldLight, fontFamily: T.fontDisplay, fontSize: 15, fontWeight: 700,
-              boxShadow: `0 2px 8px rgba(26,58,46,0.2)`,
-            }}>
-              {user.name?.[0]?.toUpperCase() || "U"}
+      <div className="flex items-center gap-3">
+
+        <div>
+          <div className="px-6 pb-7 mt-10 mb-5">
+            <div className="flex items-center gap-2.5">
+               <div>
+                <div
+                  className="text-[17px] font-bold hidden md:block"
+                  style={{
+                    fontFamily: T.fontDisplay,
+                    color: T.green,
+                  }}
+                >
+                  TeeNatural
+                </div>
+              </div>
+              <div
+                className="w-[38px] h-[38px] rounded-xl flex items-center justify-center text-[18px] shadow-[0_4px_12px_rgba(212,175,55,0.35)]"
+                style={{
+                  background: `linear-gradient(135deg, ${T.gold}, ${T.goldLight})`,
+                }}
+              >
+                🌿
+              </div>
             </div>
           </div>
-        )}
-        <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} onClick={onLogout}
-          style={{
-            padding: "7px 16px", borderRadius: 10,
-            border: `1px solid rgba(180,50,40,0.25)`,
-            background: "rgba(220,50,40,0.05)", cursor: "pointer",
-            fontFamily: T.fontBody, fontSize: 12, fontWeight: 700,
-            color: "rgba(180,50,40,0.8)", letterSpacing: "0.04em",
-          }}>
-          Logout
-        </motion.button>
+        </div>
       </div>
 
       <style>{`
@@ -383,6 +400,13 @@ const SectionDashboard = ({ user, orders, ordersLoading, setActive }) => {
   const totalSpent   = orders.reduce((s, o) => s + (o.totalPrice || 0), 0);
   const paidOrders   = orders.filter(o => o.isPaid).length;
   const recentOrders = [...orders].sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 5);
+  const [greeting,     setGreeting]     = useState("");
+   useEffect(() => {
+    const hour = new Date().getHours();
+    if (hour < 12) setGreeting("Good morning");
+    else if (hour < 17) setGreeting("Good afternoon");
+    else setGreeting("Good evening");
+  }, []);
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
@@ -399,7 +423,7 @@ const SectionDashboard = ({ user, orders, ordersLoading, setActive }) => {
         <div style={{ position: "relative", zIndex: 1 }}>
           <p style={{ fontFamily: T.fontAccent, color: T.gold, fontSize: 15,
             letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 6 }}>
-            Welcome back
+            {greeting}
           </p>
           <h2 style={{ fontFamily: T.fontDisplay, color: "white", fontSize: 28,
             fontWeight: 700, margin: "0 0 6px", lineHeight: 1.2 }}>
@@ -482,79 +506,73 @@ const SectionProfile = ({ user, loading }) => {
   if (!user) return <EmptyState icon="👤" title="Profile unavailable" sub="Could not load your profile." />;
 
   const initials = user.name?.split(" ").map(w => w[0]).join("").toUpperCase().slice(0,2) || "U";
+  const infoRows = [
+    { label: "Full Name",  value: user.name,  icon: "✦" },
+    { label: "Email",      value: user.email, icon: "◎" },
+    { label: "Account ID", value: shortId(user._id), icon: "⬡" },
+    { label: "Status",        value: user.role?.charAt(0).toUpperCase() + user.role?.slice(1), icon: "★" },
+  ];
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 20, maxWidth: 640 }}>
-      {/* Profile card */}
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+    <div className="flex flex-col gap-5 w-full max-w-[640px]">
+      {/* Profile Card */}
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }} 
+        animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        style={{ background: T.surface, borderRadius: 24, border: `1px solid ${T.border}`,
-          boxShadow: T.shadowMd, overflow: "hidden" }}>
-        {/* Header band */}
-        <div style={{
-          height: 100, position: "relative", overflow: "hidden",
-          background: `linear-gradient(130deg, ${T.green} 0%, ${T.greenMid} 100%)`,
-        }}>
-          <div style={{ position: "absolute", top: -30, right: -30, width: 160, height: 160,
-            borderRadius: "50%", background: "rgba(212,175,55,0.12)", filter: "blur(20px)" }} />
-          <div style={{ position: "absolute", inset: 0, opacity: 0.05,
-            backgroundImage: "radial-gradient(circle, white 1px, transparent 1px)", backgroundSize: "20px 20px" }} />
+        className="bg-white rounded-3xl border border-gray-100 shadow-md overflow-hidden"
+      >
+        {/* Header Band */}
+        <div className="h-[100px]  overflow-hidden bg-linear-to-br from-[#1a3a2e] to-[#c5d207] oapcity-100 relative">
+          {/* Blur ambient gold glow */}
+          <div className="absolute -top-[30px] -right-[30px] w-40 h-40 rounded-full bg-[#d4af37]/12 blur-[20px]" />
+          {/* Radial grid background */}
+          <div className="absolute inset-0 opacity-100 bg-[radial-gradient(circle,white_1px,transparent_1px)] bg-size-[20px_20px]" />
         </div>
 
-        {/* Avatar overlap */}
-        <div style={{ padding: "0 28px 28px" }}>
-          <div style={{ display: "flex", alignItems: "flex-end", gap: 16, marginTop: -40, marginBottom: 20 }}>
-            <motion.div whileHover={{ scale: 1.05 }}
-              style={{
-                width: 80, height: 80, borderRadius: "50%", flexShrink: 0,
-                background: `linear-gradient(135deg, ${T.gold}, ${T.goldLight})`,
-                display: "flex", alignItems: "center", justifyContent: "center",
-                fontFamily: T.fontDisplay, fontSize: 28, fontWeight: 700, color: T.green,
-                border: "4px solid white", boxShadow: "0 4px 20px rgba(26,58,46,0.2)",
-              }}>
+        {/* Avatar Overlap Area */}
+        <div className="px-2.5 pb-2.5">
+          <div className="flex items-end gap-4 -mt-10 mb-5">
+            <motion.div 
+              whileHover={{ scale: 1.05 }}
+              className="w-20 h-20 rounded-full z-10 bg-linear-to-br  from-[#d4af37] to-[#f3e5ab] flex items-center justify-center font-bold text-[28px] text-[#1a3a2e] border-4 border-white shadow-[0_4px_20px_rgba(26,58,46,0.2)] shrink-0"
+            >
               {initials}
             </motion.div>
-            <div style={{ paddingBottom: 4 }}>
+            <div className="pb-1">
               <RoleBadge role={user.role} />
             </div>
           </div>
 
-          <h2 style={{ fontFamily: T.fontDisplay, fontSize: 24, fontWeight: 700,
-            color: T.green, margin: "0 0 4px" }}>
+          <h2 className="text-2xl font-bold text-[#1a3a2e] mb-1 tracking-tight">
             {user.name}
           </h2>
-          <p style={{ fontFamily: T.fontBody, fontSize: 14, color: T.muted, margin: 0 }}>
+          <p className="text-sm text-gray-400 font-medium">
             {user.email}
           </p>
         </div>
       </motion.div>
 
-      {/* Detail rows */}
-      {[
-        { label: "Full Name",   value: user.name,  icon: "✦" },
-        { label: "Email",       value: user.email, icon: "◎" },
-        { label: "Account ID",  value: shortId(user._id), icon: "⬡" },
-        { label: "Role",        value: user.role?.charAt(0).toUpperCase() + user.role?.slice(1), icon: "★" },
-      ].map((row, i) => (
-        <motion.div key={i} initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }}
+      {/* Detail Rows */}
+      {infoRows.map((row, i) => (
+        <motion.div 
+          key={i} 
+          initial={{ opacity: 0, x: -12 }} 
+          animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.1 + i * 0.07, duration: 0.4 }}
-          style={{
-            background: T.surface, borderRadius: 16, border: `1px solid ${T.border}`,
-            boxShadow: T.shadow, padding: "16px 22px",
-            display: "flex", alignItems: "center", gap: 14,
-          }}>
-          <div style={{ width: 36, height: 36, borderRadius: 10, background: T.greenPale, flexShrink: 0,
-            display: "flex", alignItems: "center", justifyContent: "center",
-            color: T.greenMid, fontSize: 16, fontWeight: 700 }}>
+          className="bg-white rounded-2xl border border-gray-100 shadow p-4 px-5 flex items-center gap-3.5"
+        >
+          {/* Custom Icon rounded container */}
+          <div className="w-9 h-9 rounded-10 bg-emerald-50 text-[#102a20] font-bold text-base flex items-center justify-center shrink-0">
             {row.icon}
           </div>
-          <div style={{ flex: 1 }}>
-            <div style={{ fontFamily: T.fontBody, fontSize: 11, fontWeight: 700,
-              textTransform: "uppercase", letterSpacing: "0.07em", color: T.muted, marginBottom: 2 }}>
+          
+          <div className="flex-1 min-w-0">
+            <div className="text-[11px] font-bold text-gray-400 uppercase tracking-[0.07em] mb-0.5">
               {row.label}
             </div>
-            <div style={{ fontFamily: T.fontBody, fontSize: 15, fontWeight: 600, color: T.green }}>
-              {row.value}
+            <div className="text-sm font-semibold text-[#1a3a2e] truncate">
+              {row.value === "User" ? 'Customer' : row.value}
             </div>
           </div>
         </motion.div>
@@ -867,6 +885,15 @@ const SectionProducts = () => {
   );
 };
 
+const SectionHome = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    navigate("/")
+  }, [navigate])
+
+};
+
 // ─────────────────────────────────────────────────────────────────────────────
 // ROOT DASHBOARD COMPONENT
 // ─────────────────────────────────────────────────────────────────────────────
@@ -878,11 +905,14 @@ const Dashboard = () => {
   const [userLoading, setUserLoading] = useState(true);
   const [orders,      setOrders]      = useState([]);
   const [ordLoading,  setOrdLoading]  = useState(true);
+  
 
   // ── Auth guard ─────────────────────────────────────────────────────────
   useEffect(() => {
     if (!localStorage.getItem("tn_token")) navigate("/login");
   }, [navigate]);
+
+ 
 
   // ── Fetch profile ──────────────────────────────────────────────────────
   useEffect(() => {
@@ -908,6 +938,7 @@ const Dashboard = () => {
 
   const renderSection = () => {
     switch (active) {
+      case "home":      return <SectionHome />;
       case "dashboard": return <SectionDashboard user={user} orders={orders} ordersLoading={ordLoading} setActive={setActive} />;
       case "profile":   return <SectionProfile user={user} loading={userLoading} />;
       case "orders":    return <SectionOrders orders={orders} loading={ordLoading} />;
