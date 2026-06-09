@@ -40,6 +40,7 @@ import {
   FaLock,
   FaSpinner,
 } from "react-icons/fa";
+import api from "../api/axios";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // CONFIG
@@ -713,7 +714,7 @@ const TeeNaturalProducts = () => {
     setLoading(true);
     setFetchError(null);
     try {
-      const { data } = await axios.get(`${API_BASE_URL}/api/products`);
+      const { data } = await api.get(`/api/products`);
       // Handles both plain array and { products: [...] } response shapes
       setProducts(Array.isArray(data) ? data : (data.products ?? []));
     } catch (err) {
@@ -764,73 +765,91 @@ const TeeNaturalProducts = () => {
 
   // ── Checkout: POST /api/orders → POST /api/orders/pay → Paystack redirect
   const handleCheckout = async () => {
-    if (cartItems.length === 0) return;
-    setIsCheckingOut(true);
-    setCheckoutError(null);
+      if (cartItems.length === 0) return;
 
-    try {
-      // ─ Get user email ─────────────────────────────────────────────────────
-      // Replace with your auth source, e.g.:
-      //   import { useAuth } from "../context/AuthContext"
-      //   const { user } = useAuth()  →  user.email
-      const email = localStorage.getItem("userEmail") || "";
-      if (!email) throw new Error("Please log in to proceed to checkout.");
+      setIsCheckingOut(true);
+      setCheckoutError(null);
 
-      // ─ Step 1: Create order ────────────────────────────────────────────────
-      const { data: orderData } = await axios.post(
-        `${API_BASE_URL}/api/orders`,
-        {
-          orderItems: cartItems.map(item => ({
-            product:  item._id,
-            name:     item.name,
-            price:    item.price,
-            quantity: item.quantity,
-            image:    item.image,
-          })),
-          totalPrice,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
-          },
+      try {
+        // Get auth data
+        const token = localStorage.getItem("tn_token");
+
+        const user = JSON.parse(
+          localStorage.getItem("tn_user") || "{}"
+        );
+
+        if (!token) {
+          throw new Error("Please log in to proceed to checkout.");
         }
-      );
 
-      const orderId = orderData._id ?? orderData.order?._id;
-      if (!orderId) throw new Error("Server did not return an order ID.");
-
-      // ─ Step 2: Initialize Paystack payment (backend handles secret key) ───
-      const { data: payData } = await axios.post(
-        `${API_BASE_URL}/api/orders/pay`,
-        { email, amount: totalPrice, orderId },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
-          },
+        if (!user.email) {
+          throw new Error("User email not found.");
         }
-      );
 
-      // Backend returns Paystack's authorization_url (nested or flat)
-      const authUrl =
-        payData?.data?.authorization_url ??
-        payData?.authorization_url;
+        // Step 1: Create order
+        const { data: order } = await api.post(
+          `/api/orders`,
+          {
+            orderItems: cartItems.map((item) => ({
+              product: item._id,
+              name: item.name,
+              price: item.price,
+              quantity: item.quantity,
+              image: item.image,
+            })),
+            totalPrice,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
-      if (!authUrl) throw new Error("Payment URL missing from server response.");
+        const orderId = order._id;
 
-      // ─ Step 3: Clear cart then redirect to Paystack ────────────────────────
-      cartDispatch({ type: "CLEAR" });
-      window.location.href = authUrl;
+        if (!orderId) {
+          throw new Error("Order creation failed.");
+        }
 
-    } catch (err) {
-      setCheckoutError(
-        err?.response?.data?.message || err?.message || "Checkout failed. Please try again."
-      );
-    } finally {
-      setIsCheckingOut(false);
-    }
-  };
+        // Step 2: Initialize Paystack
+        const { data: paystack } = await api.post(
+          `api/orders/pay`,
+          {
+            email: user.email,
+            amount: totalPrice,
+            orderId,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        // Step 3: Redirect to Paystack
+        const paymentUrl = paystack?.data?.authorization_url;
+
+        if (!paymentUrl) {
+          throw new Error("Unable to initialize payment.");
+        }
+
+        window.location.href = paymentUrl;
+
+      } catch (err) {
+        console.error("Checkout error:", err);
+
+        setCheckoutError(
+          err.response?.data?.message ||
+          err.message ||
+          "Checkout failed."
+        );
+      } finally {
+        setIsCheckingOut(false);
+      }
+};
 
   // ─────────────────────────────────────────────────────────────────────────
   // RENDER

@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
+import api from "../api/axios";
 
 // ── Design tokens matching TeeNatural brand ───────────────────────────────
 const T = {
@@ -207,14 +208,10 @@ const Register = () => {
 
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:3000/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: form.name.trim(),
-          email: form.email.trim().toLowerCase(),
-          password: form.password,
-        }),
+      const res = await api.post("/api/auth/register", {
+        name: form.name.trim(),
+        email: form.email.trim().toLowerCase(),
+        password: form.password,
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Registration failed. Please try again.");

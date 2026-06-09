@@ -224,14 +224,17 @@ const TeeNaturalLanding = () => {
               PERFORMANCE TIP: Add this link tag to your index.html <head> for fast LCP speeds:
               <link rel="preload" as="image" href="/hero-bg.jpg" fetchpriority="high">
             */}
+           <div className="absolute inset-0 z-0 overflow-hidden">
             <img
-              src="/tee.png" 
-              alt="Aesthetic background pattern" 
-              className="absolute inset-0 w-full h-full object-cover z-0"
+              src="/tee.png"
+              alt=""
+              className="w-full h-full object-cover scale-105"
               loading="eager"
-              fetchpriority="high"
-              decoding="sync"
+              fetchPriority="high"
             />
+
+            <div className="absolute inset-0 bg-gradient-to-br from-black/55 via-black/35 to-green-950/55" />
+          </div>
             
             {/* Dark tint layer ensuring text pop */}
             <div className="absolute inset-0 bg-black/45 z-10" />

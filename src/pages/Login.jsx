@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
+import api from "../api/axios";
 
 // ── Design tokens ─────────────────────────────────────────────────────────
 const T = {
@@ -167,20 +168,29 @@ const Login = () => {
 
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:3000/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: form.email.trim().toLowerCase(),
-          password: form.password,
-        }),
+      const res = await api.post("/auth/login", {
+        email: form.email.trim().toLowerCase(),
+        password: form.password,
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Invalid email or password.");
+      console.log(res);
+      const data = await res.data;
+      if (!data) throw new Error(data.message || "Invalid email or password.");
 
       // Persist token if returned
-      if (data.token) localStorage.setItem("tn_token", data.token);
-      if (data.user)  localStorage.setItem("tn_user",  JSON.stringify(data.user));
+      if (data.token) { localStorage.setItem("tn_token", data.token);
+        localStorage.setItem("tn_user",JSON.stringify({
+              _id: data._id,
+              name: data.name,
+              email: data.email,
+            })
+          );
+        }
+
+        console.log(localStorage.getItem("tn_token"));
+
+        console.log(
+          JSON.parse(localStorage.getItem("tn_user"))
+        );
 
       setSuccess(true);
       setTimeout(() => navigate("/"), 2200);

@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import api from "../api/axios";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // DESIGN TOKENS — Dark SaaS theme with TeeNatural gold accent
@@ -56,12 +57,12 @@ const T = {
 // ─────────────────────────────────────────────────────────────────────────────
 // AXIOS INSTANCE
 // ─────────────────────────────────────────────────────────────────────────────
-const api = axios.create({ baseURL: "http://localhost:3000/api" });
-api.interceptors.request.use(cfg => {
-  const token = localStorage.getItem("tn_token");
-  if (token) cfg.headers.Authorization = `Bearer ${token}`;
-  return cfg;
-});
+// // const api = axios.create({ baseURL: "http://localhost:3000/api" });
+// api.interceptors.request.use(cfg => {
+//   const token = localStorage.getItem("tn_token");
+//   if (token) cfg.headers.Authorization = `Bearer ${token}`;
+//   return cfg;
+// });
 
 // ─────────────────────────────────────────────────────────────────────────────
 // HELPERS
@@ -435,6 +436,7 @@ const StatCard = ({ icon, label, value, sub, accent, delay=0 }) => (
 // SECTION: OVERVIEW
 // ─────────────────────────────────────────────────────────────────────────────
 const SectionOverview = ({ stats, orders, setActive }) => {
+  const ordersCount = stats.orders;
   const recent = [...(orders||[])].sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt)).slice(0,6);
   return (
     <div style={{ display:"flex", flexDirection:"column", gap:24 }}>
@@ -784,9 +786,24 @@ const SectionOrders = ({ toast }) => {
   const [search,  setSearch]  = useState("");
   const [saving,  setSaving]  = useState({});
 
+  useEffect(() => {
+  api.get("/admin/orders")
+    .then((r) => {
+      console.log("Orders Response:", r.data);
+      setOrders(
+        Array.isArray(r.data)
+          ? r.data
+          : r.data?.orders || []
+      );
+    })
+    .catch((err) => {
+      console.log("Orders Error:", err);
+    });
+}, []);
+
   const load = useCallback(()=>{
     setLoading(true);
-    api.get("/orders")
+    api.get("/admin/orders")
       .then(r=>setOrders(Array.isArray(r.data)?r.data:r.data?.orders||[]))
       .catch(()=>toast("Failed to load orders","error"))
       .finally(()=>setLoading(false));
@@ -797,7 +814,7 @@ const SectionOrders = ({ toast }) => {
   const updateStatus = async (id, payload, label) => {
     setSaving(s=>({...s,[id]:true}));
     try {
-      await api.put(`/orders/${id}`, payload);
+      await api.put(`/admin/orders/${id}`, payload);
       toast(`Order ${label}`,"success");
       load();
     } catch { toast("Update failed","error"); }
@@ -849,7 +866,7 @@ const SectionOrders = ({ toast }) => {
           boxShadow:T.shadow,overflow:"hidden" }}>
         {loading ? (
           <div style={{ display:"flex",justifyContent:"center",padding:60 }}><Spinner size={28} /></div>
-        ) : sorted.length===0 ? (
+        ) : sorted.length === 0 ? (
           <EmptyState icon="📭" title="No orders found" sub="Orders will appear here once customers purchase." />
         ) : (
           <div style={{ overflowX:"auto" }}>
@@ -866,7 +883,7 @@ const SectionOrders = ({ toast }) => {
                     <td style={{ color:T.textSec,fontSize:12 }}>{o.user?.email||o.shippingAddress?.email||"—"}</td>
                     <td style={{ color:T.textSec }}>{o.orderItems?.length||0}</td>
                     <td><span style={{ fontWeight:700 }}>{fmtMoney(o.totalPrice)}</span></td>
-                    <td><Badge label={o.isPaid?"Paid":"Pending"} /></td>
+                    <td><Badge label={o.isPaid?"Paid":"pending"} /></td>
                     <td>
                       <select value={o.status||o.orderStatus||"Processing"}
                         onChange={e=>updateStatus(o._id,{status:e.target.value,orderStatus:e.target.value},"status updated")}
@@ -1102,9 +1119,13 @@ const AdminDashboard = () => {
   },[]);
 
   // Auth guard
-  useEffect(()=>{
-    if (!localStorage.getItem("tn_token")) navigate("/login");
-  },[navigate]);
+  useEffect(() => {
+  const token = localStorage.getItem("tn_token");
+
+  if (!token) {
+    navigate("/login");
+  }
+}, [navigate]);
 
   // Fetch profile
   useEffect(()=>{
@@ -1115,7 +1136,7 @@ const AdminDashboard = () => {
 
   // Fetch overview data
   useEffect(()=>{
-    api.get("/orders").then(r=>setOrders(Array.isArray(r.data)?r.data:r.data?.orders||[])).catch(()=>{});
+    api.get("/orders/my").then(r=>setOrders(Array.isArray(r.data)?r.data:r.data?.orders||[])).catch(()=>{});
     api.get("/products").then(r=>setProducts(r.data?.products||r.data||[])).catch(()=>{});
     api.get("/admin/users").then(r=>setUsers(Array.isArray(r.data)?r.data:r.data?.users||[])).catch(()=>{});
   },[]);
