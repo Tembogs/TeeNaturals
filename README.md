@@ -11,6 +11,18 @@ The project was built with scalability and maintainability in mind using modern 
 https://tee-naturals.vercel.app/
 
 ---
+<img width="1600" height="840" alt="IMG-20260607-WA0001" src="https://github.com/user-attachments/assets/8bf7e437-008b-49d5-9da0-39c813a34b2d" />
+
+<img width="1600" height="738" alt="IMG-20260609-WA0008" src="https://github.com/user-attachments/assets/e3a0b530-80ec-4675-bd5d-534a8f67bb4d" />
+
+<img width="1600" height="840" alt="IMG-20260609-WA0009" src="https://github.com/user-attachments/assets/5a087dfa-01f2-4f5b-8fce-4e79b1da1259" />
+
+<img width="1600" height="751" alt="IMG-20260609-WA0016" src="https://github.com/user-attachments/assets/396de7e1-4cc3-465a-8a55-56e3e322d815" />
+
+<img width="1600" height="795" alt="IMG-20260609-WA0017" src="https://github.com/user-attachments/assets/3770bfe2-b12b-49c6-82ef-5341b549a413" />
+
+<img width="1600" height="747" alt="IMG-20260609-WA0007" src="https://github.com/user-attachments/assets/565e5c79-67a4-49a4-a9fb-6a4fb8ef2927" />
+
 <img width="1600" height="840" alt="IMG-20260609-WA0009" src="https://github.com/user-attachments/assets/da6b986e-0b1d-4e2b-a288-5948dd5ba982" />
 
 <img width="1600" height="742" alt="IMG-20260623-WA0006" src="https://github.com/user-attachments/assets/f16fb643-22d5-44f5-8649-e137019eed3b" />
