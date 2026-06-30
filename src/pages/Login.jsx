@@ -243,7 +243,7 @@ const Login = () => {
       className="min-h-screen relative overflow-hidden flex"
       style={{ fontFamily: T.fontBody, background: T.cream }}
     >
-
+      
       {/* ── Left panel ─────────────────────────────────────────────────── */}
       <motion.div
         initial={{ x: -60, opacity: 0 }} animate={{ x: 0, opacity: 1 }}
@@ -268,6 +268,17 @@ const Login = () => {
           className="absolute rounded-full pointer-events-none"
           style={{ width: 300, height: 300, background: `radial-gradient(circle, ${T.greenLight}, transparent 70%)`, bottom: "12%", right: "-8%" }}
         />
+        <div className="absolute inset-0 z-0 overflow-hidden">
+            <img
+              src="/teehero.jpg"
+              alt=""
+              className="w-full h-full object-cover scale-105"
+              loading="eager"
+              fetchPriority="high"
+            />
+
+            <div className="absolute inset-0 bg-gradient-to-br from-black/55 via-black/35 to-green-950/55" />
+          </div>
 
         {/* Particles */}
         {PARTICLES.map((p, i) => (

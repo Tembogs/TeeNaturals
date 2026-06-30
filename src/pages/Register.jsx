@@ -287,6 +287,17 @@ const Register = () => {
           className="absolute rounded-full pointer-events-none"
           style={{ width: 320, height: 320, background: `radial-gradient(circle, ${T.greenLight}, transparent 70%)`, bottom: "10%", right: "-10%" }}
         />
+         <div className="absolute inset-0 z-0 overflow-hidden">
+            <img
+              src="/skincare bottle.jpg"
+              alt=""
+              className="w-full h-full object-cover scale-105"
+              loading="eager"
+              fetchPriority="high"
+            />
+
+            <div className="absolute inset-0 bg-gradient-to-br from-black/55 via-black/35 to-green-950/55" />
+          </div>
 
         {/* Floating particles */}
         {PARTICLES.map((p, i) => (

@@ -590,7 +590,7 @@ console.log("Selected file:", file);
     if (!form.name||!form.price) return toast("Name and price are required","error");
     setSaving(true);
     try {
-      const payload = { ...form, price:Number(form.price), countInStock:Number(form.countInStock)||0 };
+      const payload = { ...form, price:Number(form.price), countInStock:Number(form.countInStock)||0, category:form.category||"Skincare"};
       if (editId) await api.put(`/products/${editId}`, payload);
       else        await api.post("/products", payload);
       toast(editId?"Product updated":"Product created","success");
@@ -1026,31 +1026,82 @@ const SectionSettings = ({ profile }) => (
     </motion.div>
 
     {/* Profile card */}
-    <motion.div initial={{opacity:0,y:16}} animate={{opacity:1,y:0}} transition={{delay:0.1}}
-      style={{ background:T.surface,borderRadius:20,border:`1px solid ${T.border}`,
-        boxShadow:T.shadow,overflow:"hidden" }}>
-      <div style={{ height:72,background:`linear-gradient(130deg,${T.green},${T.greenMid})`,
-        position:"relative",overflow:"hidden" }}>
-        <div style={{ position:"absolute",inset:0,opacity:0.05,
-          backgroundImage:"radial-gradient(circle,white 1px,transparent 1px)",backgroundSize:"20px 20px" }} />
-        <div style={{ position:"absolute",top:-20,right:-20,width:120,height:120,
-          borderRadius:"50%",background:"rgba(212,175,55,0.12)",filter:"blur(20px)" }} />
+    <motion.div
+  initial={{ opacity: 0, y: 16 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ delay: 0.1 }}
+  className="overflow-hidden rounded-[20px] border shadow-lg"
+  style={{
+    background: T.surface,
+    borderColor: T.border,
+    boxShadow: T.shadow,
+  }}
+>
+  {/* Header */}
+  <div
+    className="relative h-[72px] overflow-hidden"
+    style={{
+      background: `linear-gradient(130deg, ${T.green}, ${T.greenMid})`,
+    }}
+  >
+    <div
+      className="absolute inset-0 opacity-5"
+      style={{
+        backgroundImage:
+          "radial-gradient(circle, white 1px, transparent 1px)",
+        backgroundSize: "20px 20px",
+      }}
+    />
+
+    <div
+      className="absolute -top-5 -right-5 h-[120px] w-[120px] rounded-full"
+      style={{
+        background: "rgba(212,175,55,0.12)",
+        filter: "blur(20px)",
+      }}
+    />
+  </div>
+
+  {/* Content */}
+  <div className="px-6 pb-6">
+    <div className="-mt-7 mb-[18px] flex items-end gap-[14px]">
+      <div
+        className="flex h-14 w-14 z-10 shrink-0 items-center justify-center rounded-full border-[3px] text-[20px] font-bold"
+        style={{
+          background: `linear-gradient(135deg, ${T.gold}, ${T.goldLight})`,
+          color: T.green,
+          fontFamily: T.fontDisplay,
+          borderColor: "#161b22",
+          boxShadow: "0 4px 16px rgba(212,175,55,0.4)",
+        }}
+      >
+        {profile?.name?.[0]?.toUpperCase() || "A"}
       </div>
-      <div style={{ padding:"0 24px 24px" }}>
-        <div style={{ display:"flex",alignItems:"flex-end",gap:14,marginTop:-28,marginBottom:18 }}>
-          <div style={{ width:56,height:56,borderRadius:"50%",flexShrink:0,
-            background:`linear-gradient(135deg,${T.gold},${T.goldLight})`,
-            display:"flex",alignItems:"center",justifyContent:"center",
-            fontFamily:T.fontDisplay,fontSize:20,fontWeight:700,color:T.green,
-            border:"3px solid #161b22",boxShadow:`0 4px 16px rgba(212,175,55,0.4)` }}>
-            {profile?.name?.[0]?.toUpperCase()||"A"}
-          </div>
-          <Badge label={profile?.role||"admin"} />
-        </div>
-        <h3 style={{ fontFamily:T.fontDisplay,fontSize:20,fontWeight:700,color:T.textPri,margin:"0 0 3px" }}>{profile?.name}</h3>
-        <p style={{ fontFamily:T.fontBody,fontSize:13,color:T.textSec,margin:0 }}>{profile?.email}</p>
-      </div>
-    </motion.div>
+
+      <Badge label={profile?.role || "admin"} />
+    </div>
+
+    <h3
+      className="mb-[3px] text-[20px] font-bold"
+      style={{
+        color: T.textPri,
+        fontFamily: T.fontDisplay,
+      }}
+    >
+      {profile?.name}
+    </h3>
+
+    <p
+      className="text-[13px]"
+      style={{
+        color: T.textSec,
+        fontFamily: T.fontBody,
+      }}
+    >
+      {profile?.email}
+    </p>
+  </div>
+</motion.div>
 
     {/* Info rows */}
     {[

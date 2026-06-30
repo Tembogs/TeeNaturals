@@ -233,7 +233,7 @@ const TeeNaturalLanding = () => {
               fetchPriority="high"
             />
 
-            <div className="absolute inset-0 bg-gradient-to-br from-black/55 via-black/35 to-green-950/55" />
+            <div className="absolute inset-0 bg-linear-to-br from-black/55 via-black/35 to-green-950/55" />
           </div>
             
             {/* Dark tint layer ensuring text pop */}

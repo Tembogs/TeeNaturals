@@ -714,7 +714,7 @@ const TeeNaturalProducts = () => {
     setLoading(true);
     setFetchError(null);
     try {
-      const { data } = await api.get(`/api/products`);
+      const { data } = await api.get(`/products`);
       // Handles both plain array and { products: [...] } response shapes
       setProducts(Array.isArray(data) ? data : (data.products ?? []));
     } catch (err) {
@@ -765,8 +765,7 @@ const TeeNaturalProducts = () => {
 
   // ── Checkout: POST /api/orders → POST /api/orders/pay → Paystack redirect
   const handleCheckout = async () => {
-      if (cartItems.length === 0) return;
-
+      if (cartItems.length === 0) return
       setIsCheckingOut(true);
       setCheckoutError(null);
 
@@ -788,7 +787,7 @@ const TeeNaturalProducts = () => {
 
         // Step 1: Create order
         const { data: order } = await api.post(
-          `/api/orders`,
+          `/orders`,
           {
             orderItems: cartItems.map((item) => ({
               product: item._id,
@@ -815,7 +814,7 @@ const TeeNaturalProducts = () => {
 
         // Step 2: Initialize Paystack
         const { data: paystack } = await api.post(
-          `api/orders/pay`,
+          `/orders/pay`,
           {
             email: user.email,
             amount: totalPrice,

@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import Home from "./Home";
+import { toast } from "react-toastify";
 import api from "../api/axios";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -18,6 +17,8 @@ const T = {
   goldPale:   "#fdf8e7",
   cream:      "#faf7f2",
   surface:    "#ffffff",
+  red:        "#b43228",
+  redBd:      "rgba(180,50,40,0.3)",
   border:     "rgba(26,58,46,0.09)",
   borderMid:  "rgba(26,58,46,0.16)",
   muted:      "rgba(26,58,46,0.45)",
@@ -585,16 +586,156 @@ const SectionProfile = ({ user, loading }) => {
 // ─────────────────────────────────────────────────────────────────────────────
 // SECTION: ORDERS
 // ─────────────────────────────────────────────────────────────────────────────
-const SectionOrders = ({ orders, loading }) => {
+const SectionOrders = ({ orders }) => {
   const [filter, setFilter] = useState("all");
   const [detailId, setDetailId] = useState(null);
-
+  const [delTarget, setDelTarget] = useState(null);
+  const [loading, setLoading] = useState(false);
+const navigate = useNavigate();
   const filtered = filter === "all" ? orders
     : filter === "paid" ? orders.filter(o => o.isPaid)
     : orders.filter(o => !o.isPaid);
 
   const sorted = [...filtered].sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
   const detail = orders.find(o => o._id === detailId);
+
+ const load = useCallback(()=>{
+    setLoading(true);
+    api.get("/orders/my")
+      .then(r=>setProducts(r.data?.products||r.data||[]))
+      .catch(()=>toast("Failed to load products","error"))
+      .finally(()=>setLoading(false));
+  },[toast]);
+
+  useEffect(()=>{ load(); },[load]);
+  const Btn = ({
+  children,
+  onClick,
+  variant = "primary",
+  size = "md",
+  disabled = false,
+  loading = false,
+  danger = false,
+  type = "button",
+}) => {
+  const sizeClasses = {
+    sm: "px-3 py-1 text-xs",
+    md: "px-4 py-2 text-sm",
+    lg: "px-6 py-3 text-base",
+  };
+
+  const variantStyles = {
+    primary: {
+      background: `linear-gradient(135deg, ${T.green}, ${T.greenMid})`,
+      color: T.goldLight,
+      boxShadow: "0 2px 12px rgba(26,58,46,0.5)",
+    },
+    secondary: {
+      background: T.surfaceEl,
+      color: T.textPri,
+      border: `1px solid ${T.border}`,
+    },
+    ghost: {
+      background: "transparent",
+      color: T.textSec,
+      border: `1px solid ${T.border}`,
+    },
+    danger: {
+      background: "rgba(218,54,51,0.15)",
+      color: T.red,
+      border: `1px solid ${T.redBd}`,
+    },
+    gold: {
+      background: `linear-gradient(135deg, ${T.gold}, ${T.goldLight})`,
+      color: T.green,
+    },
+  };
+
+  return (
+    <motion.button
+      type={type}
+      onClick={onClick}
+      disabled={disabled || loading}
+      whileHover={!disabled && !loading ? { scale: 1.02, opacity: 0.92 } : {}}
+      whileTap={!disabled && !loading ? { scale: 0.97 } : {}}
+      className={`
+        inline-flex items-center justify-center gap-2
+        rounded-[10px]
+        font-bold tracking-wide
+        transition-all duration-200
+        ${sizeClasses[size]}
+        ${(disabled || loading) ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
+      `}
+      style={variantStyles[danger ? "danger" : variant]}
+    >
+      {loading && (
+        <Spinner
+          size={13}
+          color={variant === "primary" ? T.goldLight : T.textSec}
+        />
+      )}
+      {children}
+    </motion.button>
+  );
+};
+const Modal = ({ open, onClose, title, children, width=520 }) => (
+  <AnimatePresence>
+    {open && (
+      <>
+        <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}
+          onClick={onClose}
+          style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.7)",
+            backdropFilter:"blur(4px)", zIndex:80 }} />
+        <motion.div initial={{opacity:0,scale:0.94,y:20}} animate={{opacity:1,scale:1,y:0}}
+          exit={{opacity:0,scale:0.94,y:20}}
+          transition={{type:"spring",stiffness:300,damping:26}}
+          style={{ position:"fixed", inset:0, zIndex:90,
+            display:"flex", alignItems:"center", justifyContent:"center", padding:16 }}>
+          <div style={{ background:T.surface, borderRadius:20, width:"100%", maxWidth:width,
+            border:`1px solid ${T.border}`, boxShadow:T.shadowLg, overflow:"hidden" }}>
+            <div style={{ padding:"20px 24px", borderBottom:`1px solid ${T.border}`,
+              display:"flex", alignItems:"center", justifyContent:"space-between",
+              background:`linear-gradient(135deg, ${T.green} 0%, ${T.greenMid} 100%)` }}>
+              <h3 style={{ fontFamily:T.fontDisplay, fontSize:18, fontWeight:700,
+                color:"white", margin:0 }}>{title}</h3>
+              <motion.button whileHover={{scale:1.1,rotate:90}} whileTap={{scale:0.9}}
+                onClick={onClose}
+                style={{ width:30,height:30,borderRadius:"50%",border:"1.5px solid rgba(255,255,255,0.2)",
+                  background:"rgba(255,255,255,0.08)",color:"white",cursor:"pointer",fontSize:14,
+                  display:"flex",alignItems:"center",justifyContent:"center" }}>✕</motion.button>
+            </div>
+            <div style={{ padding:"24px" }}>{children}</div>
+          </div>
+        </motion.div>
+      </>
+    )}
+  </AnimatePresence>
+);
+
+const Confirm = ({ open, title, sub, onConfirm, onCancel }) => (
+  <Modal open={open} onClose={onCancel} title={title} width={400}>
+    <p style={{ fontFamily:T.fontBody, fontSize:14, color:T.textSec, marginBottom:24, lineHeight:1.7 }}>{sub}</p>
+    <div style={{ display:"flex", gap:10, justifyContent:"flex-end" }}>
+      <Btn variant="ghost" onClick={onCancel}>Cancel</Btn>
+      <Btn danger onClick={onConfirm}>Delete</Btn>
+    </div>
+  </Modal>
+);
+const openAdd = () => {
+    navigate("/products");
+};
+
+  const handleDelete = async () => {
+    try {
+      await api.delete(`/orders/${delTarget}`);
+      toast.success("Order deleted");
+      setDelTarget(null); load();
+      window.location.reload();
+    } catch (error) {
+      toast.error("Failed to delete order");
+      setDelTarget(null);
+    }
+  };
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
@@ -634,7 +775,8 @@ const SectionOrders = ({ orders, loading }) => {
         {loading ? (
           <div style={{ display: "flex", justifyContent: "center", padding: 60 }}><Spinner size={28} /></div>
         ) : sorted.length === 0 ? (
-          <EmptyState icon="📭" title="No orders here" sub="Try adjusting the filter above." />
+          <EmptyState icon="📭" title="No orders here" sub="Try adjusting the filter above."
+          action={{ label:"Add Order", fn:openAdd }}  />
         ) : (
           <div style={{ overflowX: "auto" }}>
             <table className="tn-table">
@@ -659,7 +801,8 @@ const SectionOrders = ({ orders, loading }) => {
                     <td><span style={{ fontWeight: 700 }}>{fmt(o.totalPrice)}</span></td>
                     <td><Badge paid={o.isPaid} /></td>
                     <td>
-                      <motion.button whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}
+                      <div style={{ display:"flex",gap:8,justifyContent:"flex-end" }}>
+                        <motion.button whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}
                         onClick={() => setDetailId(o._id)}
                         style={{
                           padding: "5px 12px", borderRadius: 8, border: `1px solid ${T.borderMid}`,
@@ -669,6 +812,8 @@ const SectionOrders = ({ orders, loading }) => {
                         }}>
                         View
                       </motion.button>
+                      <Btn size="sm" danger onClick={()=>setDelTarget(o._id)}>Delete</Btn>
+                      </div>
                     </td>
                   </motion.tr>
                 ))}
@@ -757,6 +902,9 @@ const SectionOrders = ({ orders, loading }) => {
           </>
         )}
       </AnimatePresence>
+      <Confirm open={!!delTarget} title="Delete Order"
+        sub="This action cannot be undone. The Order will be permanently removed."
+        onConfirm={handleDelete} onCancel={()=>setDelTarget(null)} />
     </div>
   );
 };
