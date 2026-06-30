@@ -56,7 +56,7 @@ const T = {
 // ─────────────────────────────────────────────────────────────────────────────
 // AXIOS INSTANCE
 // ─────────────────────────────────────────────────────────────────────────────
-const api = axios.create({ baseURL: "http://localhost:3000/api" });
+const api = axios.create({ baseURL: "https://teenaturalsapi.onrender.com/api" });
 api.interceptors.request.use(cfg => {
   const token = localStorage.getItem("tn_token");
   if (token) cfg.headers.Authorization = `Bearer ${token}`;
