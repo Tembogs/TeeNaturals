@@ -168,9 +168,13 @@ const Login = () => {
 
     setLoading(true);
     try {
-      const res = await api.post("/auth/login", {
-        email: form.email.trim().toLowerCase(),
-        password: form.password,
+      const res = await fetch("https://teenaturalsapi.onrender.com/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: form.email.trim().toLowerCase(),
+          password: form.password,
+        }),
       });
       console.log(res);
       const data = await res.data;
