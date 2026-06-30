@@ -6,14 +6,10 @@ import { FaBars, FaTimes, FaShoppingBag, FaLeaf } from "react-icons/fa";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import axios from "axios";
+import api from "../api/axios";
 
 
-const api = axios.create({ baseURL: "http://localhost:3000/api" });
-api.interceptors.request.use((cfg) => {
-  const token = localStorage.getItem("tn_token");
-  if (token) cfg.headers.Authorization = `Bearer ${token}`;
-  return cfg;
-});
+
 
 
 const T = {
@@ -100,7 +96,7 @@ const ADMIN_LINKS = [
 ];
 
 const LogoLeafLeft = () => (
-  <svg viewBox="0 0 32 40" fill="none" className="w-5 h-7 flex-shrink-0" aria-hidden="true">
+  <svg viewBox="0 0 32 40" fill="none" className="w-5 h-7 shrink-0" aria-hidden="true">
     <path d="M16 38 Q16 20 8 10 Q4 5 10 2 Q18 5 20 18 Q22 28 16 38Z" fill="#4a9a6b" />
     <line x1="16" y1="38" x2="16" y2="8" stroke="#2d5a47" strokeWidth="1.5" strokeLinecap="round" />
     <path d="M16 20 Q10 16 8 10" stroke="#2d5a47" strokeWidth="1.2" fill="none" strokeLinecap="round" opacity="0.7" />
@@ -109,7 +105,7 @@ const LogoLeafLeft = () => (
 );
 
 const LogoLeafRight = () => (
-  <svg viewBox="0 0 32 40" fill="none" className="w-5 h-7 flex-shrink-0" aria-hidden="true">
+  <svg viewBox="0 0 32 40" fill="none" className="w-5 h-7 shrink-0" aria-hidden="true">
     <path d="M16 38 Q16 20 24 10 Q28 5 22 2 Q14 5 12 18 Q10 28 16 38Z" fill="#6dbf82" />
     <line x1="16" y1="38" x2="16" y2="8" stroke="#4a9a6b" strokeWidth="1.5" strokeLinecap="round" />
     <path d="M16 20 Q22 16 24 10" stroke="#4a9a6b" strokeWidth="1.2" fill="none" strokeLinecap="round" opacity="0.7" />
@@ -162,7 +158,7 @@ const NavLogo = ({ to = "/" }) => (
       </motion.div>
       <motion.img
         src="/favicon.jpg" alt="TeeNatural logo"
-        className="w-8 h-8 sm:w-9 sm:h-9 rounded-full object-cover ring-2 ring-[#d4af37]/40 flex-shrink-0"
+        className="w-8 h-8 sm:w-9 sm:h-9 rounded-full object-cover ring-2 ring-[#d4af37]/40 shrink-0"
         animate={{ rotate: 360 }}
         transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
       />
@@ -194,8 +190,8 @@ const Avatar = ({ name, size = "sm" }) => {
     ? "w-8 h-8 text-[12px]"
     : "w-7 h-7 text-[11px]";
   return (
-    <div className={`${cls} rounded-xl flex-shrink-0 flex items-center justify-center
-      font-bold text-[#1a3a2e] bg-gradient-to-br from-[#d4af37] to-[#f0d060]
+    <div className={`${cls} rounded-xl shrink-0 flex items-center justify-center
+      font-bold text-[#1a3a2e] bg-linear-to-br from-[#d4af37] to-[#f0d060]
       shadow-[0_2px_8px_rgba(212,175,55,0.45)]`}>
       {initials}
     </div>
@@ -207,7 +203,7 @@ const Avatar = ({ name, size = "sm" }) => {
 // ─────────────────────────────────────────────────────────────────────────────
 const ChevronSvg = ({ open }) => (
   <motion.svg animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.22 }}
-    className="w-3.5 h-3.5 text-white/35 flex-shrink-0"
+    className="w-3.5 h-3.5 text-white/35 shrink-0"
     fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
   </motion.svg>
@@ -270,7 +266,7 @@ const UserDropdown = ({ profile, onLogout }) => {
               boxShadow: "0 12px 48px rgba(0,0,0,0.45), 0 3px 12px rgba(0,0,0,0.3)",
             }}>
             {/* gold top line */}
-            <div className="h-[2px] bg-gradient-to-r from-transparent via-[#d4af37] to-transparent opacity-70" />
+            <div className="h-0.5 bg-linear-to-r from-transparent via-[#d4af37] to-transparent opacity-70" />
 
             {/* Header */}
             <div className="px-4 py-3.5 border-b border-white/10"
@@ -352,13 +348,13 @@ const AdminDropdown = ({ profile, onLogout }) => {
           transition-all duration-200"
         aria-expanded={open}>
         {/* Gold admin avatar */}
-        <div className="w-7 h-7 rounded-lg flex-shrink-0 flex items-center justify-center
+        <div className="w-7 h-7 rounded-lg shrink-0 flex items-center justify-center
           text-[11px] font-bold text-[#0e1a14]
-          bg-gradient-to-br from-[#d4af37] to-[#f0d060]
+          bg-linear-to-br from-[#d4af37] to-[#f0d060]
           shadow-[0_2px_8px_rgba(212,175,55,0.5)]">
           {initials}
         </div>
-        <span className="text-[12px] font-bold text-white hidden sm:block truncate max-w-[80px]">
+        <span className="text-[12px] font-bold text-white hidden sm:block truncate max-w-20">
           {firstName}
         </span>
         <ChevronSvg open={open} />
@@ -379,15 +375,15 @@ const AdminDropdown = ({ profile, onLogout }) => {
               boxShadow: "0 16px 56px rgba(0,0,0,0.6), 0 3px 12px rgba(0,0,0,0.4)",
             }}>
             {/* gold top line */}
-            <div className="h-[2px] bg-gradient-to-r from-transparent via-[#d4af37] to-transparent opacity-80" />
+            <div className="h-0.5 bg-linear-to-r from-transparent via-[#d4af37] to-transparent opacity-80" />
 
             {/* Header */}
             <div className="px-4 py-3.5 border-b border-white/08"
               style={{ background: "linear-gradient(135deg,#1a3a2e,#0e1a14)" }}>
               <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-xl flex-shrink-0 flex items-center justify-center
+                <div className="w-9 h-9 rounded-xl shrink-0 flex items-center justify-center
                   text-[14px] font-bold text-[#0e1a14]
-                  bg-gradient-to-br from-[#d4af37] to-[#f0d060]">
+                  bg-linear-to-br from-[#d4af37] to-[#f0d060]">
                   {initials}
                 </div>
                 <div className="min-w-0">
@@ -458,7 +454,7 @@ const MobileDrawer = ({ open, onClose, profile, onLogout, cartCount }) => (
             <DrawerIllustration />
             <div className="relative z-10 flex items-center gap-3">
               <motion.img src="/favicon.jpg" alt="TeeNatural"
-                className="w-10 h-10 rounded-full object-cover ring-2 ring-[#d4af37]/50 flex-shrink-0"
+                className="w-10 h-10 rounded-full object-cover ring-2 ring-[#d4af37]/50 shrink-0"
                 animate={{ rotate: 360 }} transition={{ duration: 22, repeat: Infinity, ease: "linear" }} />
               <div>
                 <p style={{ fontFamily: T.fontDisplay }}
@@ -496,13 +492,13 @@ const MobileDrawer = ({ open, onClose, profile, onLogout, cartCount }) => (
                         ? "bg-[#d4af37]/15 text-[#d4af37]"
                         : "text-white/80 hover:bg-white/08 hover:text-white"
                       }`}>
-                    <span className={`w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors
+                    <span className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 transition-colors
                       ${active ? "bg-[#d4af37] text-[#1a3a2e]" : "bg-white/10 text-white/55 group-hover:bg-white/15"}`}>
                       <link.Icon />
                     </span>
                     <span className="font-medium text-sm flex-1">{link.name}</span>
                     {active && <motion.span layoutId="mobileActiveDot"
-                      className="w-1.5 h-1.5 rounded-full bg-[#d4af37] flex-shrink-0" />}
+                      className="w-1.5 h-1.5 rounded-full bg-[#d4af37] shrink-0" />}
                   </Link>
                 </motion.div>
               );
@@ -536,7 +532,7 @@ const MobileDrawer = ({ open, onClose, profile, onLogout, cartCount }) => (
                     bg-[#d4af37] hover:bg-[#c29d2f] text-[#1a3a2e] py-3.5 rounded-2xl
                     font-bold text-base transition-colors overflow-hidden group"
                   style={{ boxShadow: "0 8px 24px rgba(212,175,55,0.4)" }}>
-                  <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent
+                  <span className="absolute inset-0 bg-linear-to-r from-transparent via-white/25 to-transparent
                     -translate-x-full group-hover:translate-x-full transition-transform duration-500 pointer-events-none" />
                   <FaShoppingBag className="text-sm relative z-10" aria-hidden="true" />
                   <span className="relative z-10">Login to Shop</span>
@@ -550,7 +546,7 @@ const MobileDrawer = ({ open, onClose, profile, onLogout, cartCount }) => (
                     bg-[#d4af37] hover:bg-[#c29d2f] text-[#1a3a2e] py-3.5 rounded-2xl
                     font-bold text-base transition-colors overflow-hidden group"
                   style={{ boxShadow: "0 8px 24px rgba(212,175,55,0.4)" }}>
-                  <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent
+                  <span className="absolute inset-0 bg-linear-to-r from-transparent via-white/25 to-transparent
                     -translate-x-full group-hover:translate-x-full transition-transform duration-500 pointer-events-none" />
                   <FaShoppingBag className="text-sm relative z-10" />
                   <span className="relative z-10">Shop Now</span>
@@ -606,15 +602,15 @@ const AdminMobileDrawer = ({ open, onClose, profile, onLogout }) => {
               boxShadow: "0 24px 80px rgba(0,0,0,0.7), 0 4px 16px rgba(0,0,0,0.5)" }}>
 
             {/* gold top accent */}
-            <div className="h-[2px] bg-gradient-to-r from-transparent via-[#d4af37] to-transparent opacity-70" />
+            <div className="h-0.5 bg-linear-to-r from-transparent via-[#d4af37] to-transparent opacity-70" />
 
             {/* Admin header */}
             <div className="px-5 pt-5 pb-4 border-b border-white/08"
               style={{ background: "linear-gradient(135deg,#1a3a2e,#0e1a14)" }}>
               <div className="flex items-center gap-3">
-                <div className="w-11 h-11 rounded-xl flex-shrink-0 flex items-center justify-center
+                <div className="w-11 h-11 rounded-xl shrink-0 flex items-center justify-center
                   text-[15px] font-bold text-[#0e1a14]
-                  bg-gradient-to-br from-[#d4af37] to-[#f0d060]
+                  bg-linear-to-br from-[#d4af37] to-[#f0d060]
                   shadow-[0_3px_12px_rgba(212,175,55,0.5)]">
                   {profile?.name?.split(" ").map((w) => w[0]).join("").toUpperCase().slice(0, 2) || "A"}
                 </div>
@@ -647,7 +643,7 @@ const AdminMobileDrawer = ({ open, onClose, profile, onLogout }) => {
                         ? "bg-[rgba(212,175,55,0.15)] text-[#d4af37] border border-[rgba(212,175,55,0.2)]"
                         : "text-white/55 hover:text-white hover:bg-white/05 border border-transparent"
                       }`}>
-                    <span className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0
+                    <span className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0
                       bg-white/06 text-base">
                       {link.icon}
                     </span>
@@ -752,19 +748,19 @@ const TeeNaturalNavbar = () => {
             fontFamily: T.fontBody,
           }}>
           {/* Gold top border */}
-          <div className="absolute top-0 left-0 right-0 h-[2px]
-            bg-gradient-to-r from-transparent via-[#d4af37] to-transparent opacity-65" />
+          <div className="absolute top-0 left-0 right-0 h-0.5
+            bg-linear-to-r from-transparent via-[#d4af37] to-transparent opacity-65" />
 
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-6">
             {/* Logo */}
             <NavLogo to="/" />
 
             {/* Separator */}
-            <div className="hidden lg:block w-px h-5 bg-white/12 flex-shrink-0" />
+            <div className="hidden lg:block w-px h-5 bg-white/12 shrink-0" />
 
             {/* Admin badge */}
             <div className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-lg
-              bg-[rgba(212,175,55,0.1)] border border-[rgba(212,175,55,0.2)] flex-shrink-0">
+              bg-[rgba(212,175,55,0.1)] border border-[rgba(212,175,55,0.2)] shrink-0">
               <span className="w-1.5 h-1.5 rounded-full bg-[#d4af37]"
                 style={{ boxShadow: "0 0 6px #d4af37" }} />
               <span className="text-[10px] font-bold tracking-widest uppercase text-[#d4af37]">Admin</span>
@@ -807,7 +803,7 @@ const TeeNaturalNavbar = () => {
             <motion.button whileTap={{ scale: 0.88 }}
               onClick={() => setMenuOpen((v) => !v)}
               className="flex lg:hidden w-9 h-9 bg-white/08 hover:bg-white/14 rounded-full
-                items-center justify-center transition-colors flex-shrink-0 border border-white/10"
+                items-center justify-center transition-colors shrink-0 border border-white/10"
               aria-label={menuOpen ? "Close menu" : "Open menu"}>
               <AnimatePresence mode="wait">
                 {menuOpen
@@ -847,7 +843,7 @@ const TeeNaturalNavbar = () => {
 
         {/* gold accent bottom line */}
         <div className="absolute bottom-0 left-0 right-0 h-px
-          bg-gradient-to-r from-transparent via-[#d4af37]/35 to-transparent" />
+          bg-linear-to-r from-transparent via-[#d4af37]/35 to-transparent" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center">
 
@@ -865,7 +861,7 @@ const TeeNaturalNavbar = () => {
                 <span className={`flex items-center gap-1.5 text-sm font-medium transition-colors
                   duration-200 whitespace-nowrap
                   ${isActive(link.href) ? "text-[#d4af37]" : "text-white/80 group-hover:text-[#d4af37]"}`}>
-                  <span className={`transition-colors flex-shrink-0
+                  <span className={`transition-colors shrink-0
                     ${isActive(link.href) ? "text-[#d4af37]" : "text-white/35 group-hover:text-[#d4af37]"}`}>
                     <link.Icon />
                   </span>
@@ -891,7 +887,7 @@ const TeeNaturalNavbar = () => {
               /* ── LOGGED IN USER ── */
               <>
                 {/* Shop Now — desktop */}
-                <Link to="/products" className="hidden lg:block flex-shrink-0">
+                <Link to="/products" className="hidden lg:block shrink-0">
                   <motion.button
                     whileHover={{ scale: 1.05, boxShadow: "0 0 28px rgba(212,175,55,0.5)" }}
                     whileTap={{ scale: 0.96 }}
@@ -909,7 +905,7 @@ const TeeNaturalNavbar = () => {
                 </Link>
 
                 {/* Mobile cart icon */}
-                <Link to="/products" className="flex lg:hidden flex-shrink-0">
+                <Link to="/products" className="flex lg:hidden shrink-0">
                   <motion.div whileTap={{ scale: 0.9 }}
                     className="relative w-9 h-9 bg-[#d4af37] rounded-full
                       flex items-center justify-center shadow-md">
@@ -945,7 +941,7 @@ const TeeNaturalNavbar = () => {
                 </Link>
 
                 {/* Shop Now gold btn */}
-                <Link to="/products" className="hidden lg:block flex-shrink-0">
+                <Link to="/products" className="hidden lg:block shrink-0">
                   <motion.button
                     whileHover={{ scale: 1.05, boxShadow: "0 0 24px rgba(212,175,55,0.45)" }}
                     whileTap={{ scale: 0.96 }}
@@ -963,7 +959,7 @@ const TeeNaturalNavbar = () => {
                 </Link>
 
                 {/* Mobile cart */}
-                <Link to="/products" className="flex lg:hidden flex-shrink-0">
+                <Link to="/products" className="flex lg:hidden shrink-0">
                   <motion.div whileTap={{ scale: 0.9 }}
                     className="relative w-9 h-9 bg-[#d4af37] rounded-full
                       flex items-center justify-center shadow-md">
@@ -986,7 +982,7 @@ const TeeNaturalNavbar = () => {
             <motion.button whileTap={{ scale: 0.88 }}
               onClick={() => setMenuOpen((v) => !v)}
               className="flex lg:hidden w-9 h-9 bg-white/10 hover:bg-white/18 rounded-full
-                items-center justify-center transition-colors flex-shrink-0"
+                items-center justify-center transition-colors shrink-0"
               aria-label={menuOpen ? "Close menu" : "Open menu"}
               aria-expanded={menuOpen}>
               <AnimatePresence mode="wait">

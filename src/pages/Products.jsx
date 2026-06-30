@@ -235,9 +235,9 @@ const SkeletonCard = ({ index }) => (
     className="bg-white rounded-3xl overflow-hidden flex flex-col"
     style={{ boxShadow: T.clay }}
   >
-    <div className="h-52 sm:h-56 relative overflow-hidden bg-gradient-to-br from-stone-100 to-stone-200">
+    <div className="h-52 sm:h-56 relative overflow-hidden bg-linear-to-br from-stone-100 to-stone-200">
       <motion.div
-        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent"
+        className="absolute inset-0 bg-linear-to-r from-transparent via-white/40 to-transparent"
         animate={{ x: ["-100%", "100%"] }}
         transition={{ duration: 1.4, repeat: Infinity, ease: "linear", repeatDelay: 0.3 }}
       />
@@ -293,7 +293,7 @@ const CheckoutErrorToast = ({ message, onClose }) => (
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 40 }}
-        className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[60] bg-red-600 text-white px-5 py-3 rounded-2xl shadow-xl flex items-center gap-3 text-sm font-medium max-w-sm w-[90vw]"
+        className="fixed bottom-24 left-1/2 -translate-x-1/2 z-60 bg-red-600 text-white px-5 py-3 rounded-2xl shadow-xl flex items-center gap-3 text-sm font-medium max-w-sm w-[90vw]"
       >
         <FaExclamationTriangle className="shrink-0" />
         <span className="flex-1">{message}</span>
@@ -313,7 +313,7 @@ const LazyImage = ({ src, alt, className }) => {
   return (
     <div className={`relative overflow-hidden ${className}`}>
       {!loaded && (
-        <div className="absolute inset-0 bg-gradient-to-br from-stone-100 to-stone-200 animate-pulse" />
+        <div className="absolute inset-0 bg-linear-to-br from-stone-100 to-stone-200 animate-pulse" />
       )}
       <img
         src={src}
@@ -362,7 +362,7 @@ const ProductCard = ({
         {/* ── Image ── */}
         <div className="relative overflow-hidden h-52 sm:h-56">
           <LazyImage src={product.image} alt={product.name} className="w-full h-full" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <div className="absolute inset-0 bg-linear-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
           {/* Category badge */}
           <div className="absolute top-3 left-3">
@@ -432,6 +432,7 @@ const ProductCard = ({
                 </motion.span>
                 <button
                   onClick={() => onIncrement(product._id)}
+                  disabled={quantity >= product.countInStock}
                   className="w-8 h-8 bg-[#1a3a2e]/8 hover:bg-green-50 rounded-full flex items-center justify-center transition-colors"
                   aria-label="Increase quantity"
                 >
@@ -440,6 +441,16 @@ const ProductCard = ({
               </motion.div>
             )}
           </AnimatePresence>
+          {/* Blocked Reason Error Message */}
+          {quantity >= product.countInStock && (
+            <motion.p 
+              initial={{ opacity: 0, y: -4 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-[10px] font-mono uppercase tracking-widest text-red-500 mt-2 font-bold"
+            >
+              Maximum available units reached ({product.countInStock} left)
+            </motion.p>
+          )}
 
           {/* Add to cart — only when qty = 0 */}
           <AnimatePresence mode="wait">
@@ -558,7 +569,7 @@ const CartSidebar = ({
                   <img
                     src={item.image}
                     alt={item.name}
-                    className="w-[72px] h-[72px] rounded-xl object-cover flex-shrink-0"
+                    className="w-[72px] h-[72px] rounded-xl object-cover shrink-0"
                     loading="lazy"
                   />
                   <div className="flex-1 min-w-0">
@@ -568,6 +579,15 @@ const CartSidebar = ({
                     <p className="text-[#d4af37] font-bold text-sm">
                       ₦{(item.price * item.quantity).toLocaleString()}
                     </p>
+                    {item.quantity >= item.countInStock && (
+                    <motion.p 
+                      initial={{ opacity: 0, y: -4 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="text-[10px] font-mono uppercase tracking-widest text-red-500 mt-2 font-bold"
+                    >
+                      Maximum available units reached ({item.countInStock} left)
+                    </motion.p>
+                  )}
 
                     <div className="flex items-center gap-2 mt-2">
                       {/* Decrement / remove-if-zero */}
@@ -586,6 +606,7 @@ const CartSidebar = ({
                       {/* Increment */}
                       <button
                         onClick={() => onIncrement(item._id)}
+                        disabled={item.quantity >= item.countInStock}
                         className="w-6 h-6 bg-white rounded-full shadow flex items-center justify-center hover:bg-green-50 transition-colors"
                         aria-label={`Increase quantity of ${item.name}`}
                       >
