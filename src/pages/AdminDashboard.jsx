@@ -1064,7 +1064,7 @@ const SectionSettings = ({ profile }) => (
 
   {/* Content */}
   <div className="px-6 pb-6">
-    <div className="-mt-7 mb-[18px] flex items-end gap-[14px]">
+    <div className="-mt-7 mb-[18px] flex items-end gap-3.5">
       <div
         className="flex h-14 w-14 z-10 shrink-0 items-center justify-center rounded-full border-[3px] text-[20px] font-bold"
         style={{
