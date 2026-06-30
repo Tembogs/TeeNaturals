@@ -33,12 +33,12 @@ const T = {
 // ─────────────────────────────────────────────────────────────────────────────
 // AXIOS INSTANCE
 // ─────────────────────────────────────────────────────────────────────────────
-// const api = axios.create({ baseURL: "http://localhost:3000/api" });
-// api.interceptors.request.use(cfg => {
-//   const token = localStorage.getItem("tn_token");
-//   if (token) cfg.headers.Authorization = `Bearer ${token}`;
-//   return cfg;
-// });
+const api = axios.create({ baseURL: "https://teenaturalsapi.onrender.com//api" });
+api.interceptors.request.use(cfg => {
+  const token = localStorage.getItem("tn_token");
+  if (token) cfg.headers.Authorization = `Bearer ${token}`;
+  return cfg;
+});
 
 // ─────────────────────────────────────────────────────────────────────────────
 // HELPERS

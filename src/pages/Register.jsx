@@ -208,10 +208,14 @@ const Register = () => {
 
     setLoading(true);
     try {
-      const res = await api.post("/api/auth/register", {
-        name: form.name.trim(),
-        email: form.email.trim().toLowerCase(),
-        password: form.password,
+      const res = await fetch("https://teenaturalsapi.onrender.com//api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.name.trim(),
+          email: form.email.trim().toLowerCase(),
+          password: form.password,
+        }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Registration failed. Please try again.");
