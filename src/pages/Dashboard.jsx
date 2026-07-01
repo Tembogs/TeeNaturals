@@ -30,15 +30,7 @@ const T = {
   shadowMd:   "0 4px 24px rgba(26,58,46,0.10), 0 1px 4px rgba(26,58,46,0.06)",
 };
 
-// ─────────────────────────────────────────────────────────────────────────────
-// AXIOS INSTANCE
-// ─────────────────────────────────────────────────────────────────────────────
-const api = axios.create({ baseURL: "https://teenaturalsapi.onrender.com//api" });
-api.interceptors.request.use(cfg => {
-  const token = localStorage.getItem("tn_token");
-  if (token) cfg.headers.Authorization = `Bearer ${token}`;
-  return cfg;
-});
+
 
 // ─────────────────────────────────────────────────────────────────────────────
 // HELPERS

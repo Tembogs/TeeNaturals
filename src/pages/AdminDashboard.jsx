@@ -5,6 +5,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import api from "../api/axios";
 
+
 // ─────────────────────────────────────────────────────────────────────────────
 // DESIGN TOKENS — Dark SaaS theme with TeeNatural gold accent
 // ─────────────────────────────────────────────────────────────────────────────
@@ -54,19 +55,7 @@ const T = {
   shadowLg:"0 8px 32px rgba(0,0,0,0.5), 0 2px 8px rgba(0,0,0,0.4)",
 };
 
-// ─────────────────────────────────────────────────────────────────────────────
-// AXIOS INSTANCE
-// ─────────────────────────────────────────────────────────────────────────────
-const api = axios.create({ baseURL: "https://teenaturalsapi.onrender.com/api" });
-api.interceptors.request.use(cfg => {
-  const token = localStorage.getItem("tn_token");
-  if (token) cfg.headers.Authorization = `Bearer ${token}`;
-  return cfg;
-});
 
-// ─────────────────────────────────────────────────────────────────────────────
-// HELPERS
-// ─────────────────────────────────────────────────────────────────────────────
 const fmtMoney = n =>
   new Intl.NumberFormat("en-NG", { style: "currency", currency: "NGN", maximumFractionDigits: 0 }).format(n || 0);
 const fmtDate = d =>
