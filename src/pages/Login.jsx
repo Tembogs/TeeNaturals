@@ -159,51 +159,57 @@ const Login = () => {
     return e;
   };
 
-  const handleSubmit = async e => {
-    e.preventDefault();
-    setApiError("");
-    const errs = validate();
-    setErrors(errs);
-    if (Object.keys(errs).length) return;
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+  setApiError("");
 
-    setLoading(true);
-    try {
-      const res = await fetch("https://teenaturalsapi.onrender.com/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: form.email.trim().toLowerCase(),
-          password: form.password,
-        }),
-      });
-      console.log(res);
-      const data = await res.data;
-      if (!data) throw new Error(data.message || "Invalid email or password.");
+  const errs = validate();
+  setErrors(errs);
 
-      // Persist token if returned
-      if (data.token) { localStorage.setItem("tn_token", data.token);
-        localStorage.setItem("tn_user",JSON.stringify({
-              _id: data._id,
-              name: data.name,
-              email: data.email,
-            })
-          );
-        }
+  if (Object.keys(errs).length) return;
 
-        console.log(localStorage.getItem("tn_token"));
+  setLoading(true);
 
-        console.log(
-          JSON.parse(localStorage.getItem("tn_user"))
-        );
+  try {
+    const { data } = await api.post("/auth/login", {
+      email: form.email.trim().toLowerCase(),
+      password: form.password,
+    });
 
-      setSuccess(true);
-      setTimeout(() => navigate("/"), 2200);
-    } catch (err) {
-      setApiError(err.message);
-    } finally {
-      setLoading(false);
+    if (!data.token) {
+      throw new Error("Invalid email or password.");
     }
-  };
+
+    localStorage.setItem("tn_token", data.token);
+
+    localStorage.setItem(
+      "tn_user",
+      JSON.stringify({
+        _id: data._id,
+        name: data.name,
+        email: data.email,
+      })
+    );
+
+    console.log(localStorage.getItem("tn_token"));
+    console.log(JSON.parse(localStorage.getItem("tn_user")));
+
+    setSuccess(true);
+
+    setTimeout(() => {
+      navigate("/");
+    }, 2200);
+
+  } catch (err) {
+    setApiError(
+      err.response?.data?.message ||
+      err.message ||
+      "Something went wrong."
+    );
+  } finally {
+    setLoading(false);
+  }
+};
 
   // ── Success state ─────────────────────────────────────────────────────
   if (success) {
