@@ -2,6 +2,7 @@ import React, { useRef, useEffect, memo } from "react";
 import { motion, useInView } from "framer-motion";
 import { FaLeaf, FaShoppingBag, FaStar, FaCheckCircle } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import api from "../api/axios";
 
 const TOKEN = {
   green: "#1a3a2e",
@@ -208,6 +209,48 @@ const STATS = [
 
 // ── MAIN LANDING COMPONENT ────────────────────────────────────────────────────
 const TeeNaturalLanding = () => {
+  useEffect(() => {
+  const verifyPaymentOnLanding = async () => {
+    // 1. Extract the unique transaction reference code directly from the browser window URL bar
+    const urlParams = new URLSearchParams(window.location.search);
+    const reference = urlParams.get('reference');
+    
+    if (!reference) return; // Exit quietly if the user just opened the home page normally
+
+    try {
+      console.log(`🎯 Found redirect reference code: ${reference}. Initializing synchronization bridge...`);
+      
+      // 2. Fetch user auth token from local storage
+      const token = localStorage.getItem("tn_token");
+
+      // 3. Hit your backend verification route manually using your configured 'api' instance
+      const response = await api.get(
+        `/orders/verify/${reference}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log("🔥 Sync complete! Server response:", response.data);
+      alert("🎉 Payment verified successfully! Your order is now marked as paid.");
+      
+      // 4. Clean up local storage cart data since payment is confirmed
+      localStorage.removeItem("cartItems");
+
+      // 5. Clean the browser URL bar so it doesn't run again if they refresh the home page
+      window.history.replaceState({}, document.title, window.location.pathname);
+
+    } catch (error) {
+      console.error("❌ Frontend verification bridge failure:", error.message || error);
+    }
+  };
+
+  verifyPaymentOnLanding();
+}, []); // Empty dependency array means this runs exactly once when the component mounts
+
+  
   return (
     <>
     

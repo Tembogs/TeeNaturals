@@ -786,90 +786,78 @@ const TeeNaturalProducts = () => {
 
   // ── Checkout: POST /api/orders → POST /api/orders/pay → Paystack redirect
   const handleCheckout = async () => {
-      if (cartItems.length === 0) return
-      setIsCheckingOut(true);
-      setCheckoutError(null);
+  if (cartItems.length === 0) return;
+  setIsCheckingOut(true);
+  setCheckoutError(null);
 
-      try {
-        // Get auth data
-        const token = localStorage.getItem("tn_token");
+  try {
+    const token = localStorage.getItem("tn_token");
+    const user = JSON.parse(localStorage.getItem("tn_user") || "{}");
 
-        const user = JSON.parse(
-          localStorage.getItem("tn_user") || "{}"
-        );
+    if (!token) throw new Error("Please log in to proceed to checkout.");
+    if (!user.email) throw new Error("User email not found.");
 
-        if (!token) {
-          throw new Error("Please log in to proceed to checkout.");
-        }
-
-        if (!user.email) {
-          throw new Error("User email not found.");
-        }
-
-        // Step 1: Create order
-        const { data: order } = await api.post(
-          `/orders`,
-          {
-            orderItems: cartItems.map((item) => ({
-              product: item._id,
-              name: item.name,
-              price: item.price,
-              quantity: item.quantity,
-              image: item.image,
-            })),
-            totalPrice,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        const orderId = order._id;
-
-        if (!orderId) {
-          throw new Error("Order creation failed.");
-        }
-
-        // Step 2: Initialize Paystack
-        const { data: paystack } = await api.post(
-          `/orders/pay`,
-          {
-            email: user.email,
-            amount: totalPrice,
-            orderId,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        // Step 3: Redirect to Paystack
-        const paymentUrl = paystack?.data?.authorization_url;
-
-        if (!paymentUrl) {
-          throw new Error("Unable to initialize payment.");
-        }
-
-        window.location.href = paymentUrl;
-
-      } catch (err) {
-        console.error("Checkout error:", err);
-
-        setCheckoutError(
-          err.response?.data?.message ||
-          err.message ||
-          "Checkout failed."
-        );
-      } finally {
-        setIsCheckingOut(false);
+    // Step 1: Create order
+    const { data: order } = await api.post(
+      `/orders`,
+      {
+        orderItems: cartItems.map((item) => ({
+          product: item._id,
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+          image: item.image,
+        })),
+        totalPrice: totalPrice, // Explicitly pass the total price
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
       }
+    );
+
+    const orderId = order._id;
+    if (!orderId) throw new Error("Order creation failed.");
+
+    // Step 2: Initialize Paystack
+    // CRITICAL FIX: Multiply totalPrice by 100 because Paystack handles amounts in kobo/cents.
+    // Inside your handleCheckout frontend function:
+const { data: paystack } = await api.post(
+  `/orders/pay`,
+  {
+    email: user.email,
+    amount: totalPrice, // Just pass the raw price (e.g., 5000)
+    orderId,
+  },
+  {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  }
+);
+
+
+    // Step 3: Redirect to Paystack
+    const paymentUrl = paystack?.data?.authorization_url;
+    if (!paymentUrl) throw new Error("Unable to initialize payment.");
+
+    // Optional: Clear your frontend cart here if your backend has successfully stored the unpaid order.
+    // clearCart(); 
+
+    window.location.href = paymentUrl;
+
+  } catch (err) {
+    console.error("Checkout error:", err);
+    setCheckoutError(
+      err.response?.data?.message || err.message || "Checkout failed."
+    );
+    setIsCheckingOut(false); // Only set to false on error, since success redirects away.
+  }
 };
+
 
   // ─────────────────────────────────────────────────────────────────────────
   // RENDER

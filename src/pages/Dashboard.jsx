@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import api from "../api/axios";
+import { useSearchParams } from "react-router-dom";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // DESIGN TOKENS — TeeNatural brand
@@ -1046,13 +1047,75 @@ const Dashboard = () => {
   const [userLoading, setUserLoading] = useState(true);
   const [orders,      setOrders]      = useState([]);
   const [ordLoading,  setOrdLoading]  = useState(true);
-  
+  const [searchParams] = useSearchParams();
+  const [isVerifying, setIsVerifying] = useState(false);
+
+  // useEffect(() => {
+  //   const verifyPaymentOnLanding = async () => {
+  //     // 1. Extract the unique transaction reference code from Paystack's redirect URL
+  //     const reference = searchParams.get('reference');
+      
+  //     if (!reference) return; // Exit if the user just opened the dashboard normally
+
+  //     try {
+  //       console.log(`Sending reference ${reference} to backend for verification...`);
+        
+  //       // 2. Fetch user auth token from local storage
+  //       const token = localStorage.getItem("tn_token");
+  //        // 3. Hit your backend verification route manually via a standard GET request
+  //       const response = await api.get(
+  //         `/orders/verify/${reference}`,
+  //         {
+  //           headers: {
+  //             Authorization: `Bearer ${token}`,
+  //           },
+  //         }
+  //       );
+
+  //       console.log("Backend verification response:", response.data);
+  //       alert("Payment verified successfully! Your order is now marked as paid.");
+        
+  //       // 4. Clean up local storage cart data since payment is confirmed
+  //       localStorage.removeItem("cartItems");
+
+  //     } catch (error) {
+  //       console.error("Frontend verification bridge failure:", error);
+  //     }
+  //   };
+
+  //   verifyPaymentOnLanding();
+  // }, [searchParams]);
 
   // ── Auth guard ─────────────────────────────────────────────────────────
   useEffect(() => {
     if (!localStorage.getItem("tn_token")) navigate("/login");
   }, [navigate]);
 
+  useEffect(() => {
+    const confirmPayment = async () => {
+      const reference = searchParams.get("reference");
+      
+      if (!reference) return; // No payment to verify
+      
+      setIsVerifying(true);
+      try {
+        // Hit your backend GET /verify/:reference fallback endpoint manually
+        const token = localStorage.getItem("tn_token");
+        await axios.get(
+          `https://onrender.com{reference}`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        console.log("✅ Payment status verified over secure frontend fallback bridge.");
+        // Clear your frontend cart items state variable here if needed!
+      } catch (err) {
+        console.error("Verification fallback error:", err);
+      } finally {
+        setIsVerifying(false);
+      }
+    };
+
+    confirmPayment();
+  }, [searchParams]);
  
 
   // ── Fetch profile ──────────────────────────────────────────────────────
@@ -1113,6 +1176,10 @@ const Dashboard = () => {
             </motion.div>
           </AnimatePresence>
         </main>
+
+        <div>
+          {isVerifying ? <h2>🔄 Securing transaction payment status...</h2> : <h2>Your Orders Dashboard</h2>}
+        </div>
 
         {/* Footer */}
         <footer style={{ padding: "16px 24px", borderTop: `1px solid ${T.border}`,
