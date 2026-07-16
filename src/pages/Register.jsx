@@ -199,34 +199,39 @@ const Register = () => {
     return e;
   };
 
-  const handleSubmit = async e => {
-    e.preventDefault();
-    setApiError("");
-    const errs = validate();
-    setErrors(errs);
-    if (Object.keys(errs).length) return;
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+  setApiError("");
 
-    setLoading(true);
-    try {
-      const res = await fetch("https://teenaturalsapi.onrender.com//api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: form.name.trim(),
-          email: form.email.trim().toLowerCase(),
-          password: form.password,
-        }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Registration failed. Please try again.");
-      setSuccess(true);
-      setTimeout(() => navigate("/login"), 2800);
-    } catch (err) {
-      setApiError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const errs = validate();
+  setErrors(errs);
+
+  if (Object.keys(errs).length) return;
+
+  setLoading(true);
+
+  try {
+    await api.post("/auth/register", {
+      name: form.name.trim(),
+      email: form.email.trim().toLowerCase(),
+      password: form.password,
+    });
+
+    setSuccess(true);
+
+    setTimeout(() => {
+      navigate("/login");
+    }, 2800);
+  } catch (err) {
+    setApiError(
+      err.response?.data?.message ||
+      err.message ||
+      "Registration failed. Please try again."
+    );
+  } finally {
+    setLoading(false);
+  }
+};
 
   // ── Success state ────────────────────────────────────────────────────────
   if (success) {

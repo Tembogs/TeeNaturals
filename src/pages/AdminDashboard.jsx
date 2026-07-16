@@ -5,6 +5,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import api from "../api/axios";
 
+
 // ─────────────────────────────────────────────────────────────────────────────
 // DESIGN TOKENS — Dark SaaS theme with TeeNatural gold accent
 // ─────────────────────────────────────────────────────────────────────────────
@@ -56,9 +57,6 @@ const T = {
 
 
 
-// ─────────────────────────────────────────────────────────────────────────────
-// HELPERS
-// ─────────────────────────────────────────────────────────────────────────────
 const fmtMoney = n =>
   new Intl.NumberFormat("en-NG", { style: "currency", currency: "NGN", maximumFractionDigits: 0 }).format(n || 0);
 const fmtDate = d =>
