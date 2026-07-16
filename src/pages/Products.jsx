@@ -10,6 +10,7 @@
  * ✅ WhatsApp kept as fallback
  * ✅ Skeleton loaders + error/retry state
  * ✅ Checkout error toast (non-blocking)
+ * ✅ Product detail modal on card click (full description view)
  * ✅ All animations, UI, filters, search, wishlist 100% preserved
  *
  * Dependencies: framer-motion, react-icons/fa, axios
@@ -330,6 +331,170 @@ const LazyImage = ({ src, alt, className }) => {
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
+// PRODUCT DETAIL MODAL — shows full description on card click
+// ─────────────────────────────────────────────────────────────────────────────
+const ProductModal = ({
+  product,
+  onClose,
+  quantity,
+  onAddToCart,
+  onIncrement,
+  onDecrement,
+  onPurchaseNow,
+}) => {
+  // Close on ESC
+  useEffect(() => {
+    const handleKey = (e) => e.key === "Escape" && onClose();
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [onClose]);
+
+  if (!product) return null;
+
+  return (
+    <>
+      {/* Backdrop */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.2 }}
+        onClick={onClose}
+        className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 sm:p-6"
+      >
+        {/* Panel */}
+        <motion.div
+          onClick={(e) => e.stopPropagation()}
+          initial={{ opacity: 0, scale: 0.94, y: 18 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.96, y: 12 }}
+          transition={{ type: "spring", stiffness: 340, damping: 28 }}
+          className="bg-white rounded-3xl w-full max-w-3xl max-h-[88vh] overflow-hidden flex flex-col sm:flex-row relative"
+          style={{ boxShadow: "0 30px 80px rgba(0,0,0,0.35)" }}
+          role="dialog"
+          aria-modal="true"
+          aria-label={product.name}
+        >
+          {/* Close button */}
+          <button
+            onClick={onClose}
+            className="absolute top-3 right-3 z-10 w-9 h-9 bg-white/90 backdrop-blur-sm hover:bg-white rounded-full flex items-center justify-center shadow-md transition-colors"
+            aria-label="Close product details"
+          >
+            <FaTimes className="text-[#1a3a2e] text-sm" />
+          </button>
+
+          {/* Image */}
+          <div className="relative w-full sm:w-2/5 h-56 sm:h-auto shrink-0 bg-stone-100">
+            <img
+              src={product.image}
+              alt={product.name}
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute top-3 left-3">
+              <span
+                className="text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider"
+                style={{ backgroundColor: CATEGORY_META[product.category]?.color || T.green, opacity: 0.92 }}
+              >
+                {product.category}
+              </span>
+            </div>
+          </div>
+
+          {/* Content */}
+          <div className="flex-1 overflow-y-auto p-6 sm:p-8 flex flex-col">
+            <h2
+              style={{ fontFamily: T.fontDisplay }}
+              className="text-2xl sm:text-3xl font-bold text-[#1a3a2e] mb-2 leading-tight pr-8"
+            >
+              {product.name}
+            </h2>
+
+            <div className="flex items-baseline gap-2 mb-5">
+              <span style={{ fontFamily: T.fontDisplay }} className="text-2xl font-bold text-[#d4af37]">
+                ₦{(quantity > 0 ? product.price * quantity : product.price).toLocaleString()}
+              </span>
+              {quantity > 1 && (
+                <span className="text-xs text-[#1a3a2e]/45">₦{product.price.toLocaleString()} each</span>
+              )}
+            </div>
+
+            <p className="text-[#1a3a2e]/60 text-sm leading-relaxed whitespace-pre-line mb-6 flex-1">
+              {product.description}
+            </p>
+
+            {product.countInStock != null && (
+              <p className="text-[10px] font-mono uppercase tracking-widest text-[#1a3a2e]/35 mb-4">
+                {product.countInStock > 0
+                  ? `${product.countInStock} in stock`
+                  : "Out of stock"}
+              </p>
+            )}
+
+            {/* Quantity stepper */}
+            <AnimatePresence>
+              {quantity > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="flex items-center gap-2 mb-3 overflow-hidden"
+                >
+                  <button
+                    onClick={() => onDecrement(product._id)}
+                    className="w-9 h-9 bg-[#1a3a2e]/8 hover:bg-red-50 rounded-full flex items-center justify-center transition-colors"
+                    aria-label="Decrease quantity"
+                  >
+                    <FaMinus className="text-[10px] text-[#1a3a2e]" />
+                  </button>
+                  <motion.span
+                    key={quantity}
+                    initial={{ scale: 1.3 }}
+                    animate={{ scale: 1 }}
+                    className="w-9 text-center font-bold text-[#1a3a2e] text-sm"
+                  >
+                    {quantity}
+                  </motion.span>
+                  <button
+                    onClick={() => onIncrement(product._id)}
+                    disabled={quantity >= product.countInStock}
+                    className="w-9 h-9 bg-[#1a3a2e]/8 hover:bg-green-50 rounded-full flex items-center justify-center transition-colors disabled:opacity-40"
+                    aria-label="Increase quantity"
+                  >
+                    <FaPlus className="text-[10px] text-[#1a3a2e]" />
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <div className="flex flex-col gap-2.5 mt-auto pt-2">
+              {quantity === 0 && (
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.97 }}
+                  onClick={() => onAddToCart(product)}
+                  className="w-full py-3 bg-[#1a3a2e] text-white rounded-full font-semibold text-sm flex items-center justify-center gap-2"
+                >
+                  <FaShoppingCart className="text-xs" /> Add to Cart
+                </motion.button>
+              )}
+              <motion.button
+                whileHover={{ scale: 1.02, backgroundColor: "#20b858" }}
+                whileTap={{ scale: 0.97 }}
+                onClick={() => onPurchaseNow(product)}
+                className="w-full py-3 bg-[#25D366] text-white rounded-full font-semibold text-sm flex items-center justify-center gap-2 transition-colors"
+              >
+                <FaWhatsapp /> Purchase Now
+              </motion.button>
+            </div>
+          </div>
+        </motion.div>
+      </motion.div>
+    </>
+  );
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
 // PRODUCT CARD
 // ─────────────────────────────────────────────────────────────────────────────
 const ProductCard = ({
@@ -342,6 +507,7 @@ const ProductCard = ({
   onWishlist,
   isWishlisted,
   onPurchaseNow,
+  onCardClick,
 }) => {
   const ref    = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
@@ -356,7 +522,8 @@ const ProductCard = ({
       <motion.div
         whileHover={{ y: -6, boxShadow: "0 20px 50px rgba(0,0,0,0.13)" }}
         transition={{ type: "spring", stiffness: 260, damping: 22 }}
-        className="group bg-white rounded-3xl overflow-hidden h-full flex flex-col"
+        onClick={() => onCardClick(product)}
+        className="group bg-white rounded-3xl overflow-hidden h-full flex flex-col cursor-pointer"
         style={{ boxShadow: T.clay }}
       >
         {/* ── Image ── */}
@@ -377,7 +544,7 @@ const ProductCard = ({
           {/* Wishlist button */}
           <motion.button
             whileTap={{ scale: 0.85 }}
-            onClick={() => onWishlist(product._id)}
+            onClick={(e) => { e.stopPropagation(); onWishlist(product._id); }}
             className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm w-9 h-9 rounded-full flex items-center justify-center shadow-md"
             aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
           >
@@ -416,7 +583,7 @@ const ProductCard = ({
                 className="flex items-center gap-2 mb-3 overflow-hidden"
               >
                 <button
-                  onClick={() => onDecrement(product._id)}
+                  onClick={(e) => { e.stopPropagation(); onDecrement(product._id); }}
                   className="w-8 h-8 bg-[#1a3a2e]/8 hover:bg-red-50 rounded-full flex items-center justify-center transition-colors"
                   aria-label="Decrease quantity"
                 >
@@ -431,7 +598,7 @@ const ProductCard = ({
                   {quantity}
                 </motion.span>
                 <button
-                  onClick={() => onIncrement(product._id)}
+                  onClick={(e) => { e.stopPropagation(); onIncrement(product._id); }}
                   disabled={quantity >= product.countInStock}
                   className="w-8 h-8 bg-[#1a3a2e]/8 hover:bg-green-50 rounded-full flex items-center justify-center transition-colors"
                   aria-label="Increase quantity"
@@ -462,7 +629,7 @@ const ProductCard = ({
                 exit={{ opacity: 0 }}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.97 }}
-                onClick={() => onAddToCart(product)}
+                onClick={(e) => { e.stopPropagation(); onAddToCart(product); }}
                 className="w-full py-2.5 bg-[#1a3a2e] text-white rounded-full font-semibold text-sm mb-2.5 flex items-center justify-center gap-2"
               >
                 <FaShoppingCart className="text-xs" /> Add to Cart
@@ -474,7 +641,7 @@ const ProductCard = ({
           <motion.button
             whileHover={{ scale: 1.02, backgroundColor: "#20b858" }}
             whileTap={{ scale: 0.97 }}
-            onClick={() => onPurchaseNow(product)}
+            onClick={(e) => { e.stopPropagation(); onPurchaseNow(product); }}
             className="w-full py-2.5 bg-[#25D366] text-white rounded-full font-semibold text-sm flex items-center justify-center gap-2 transition-colors"
           >
             <FaWhatsapp /> Purchase Now
@@ -715,6 +882,7 @@ const TeeNaturalProducts = () => {
   const [wishlist,         setWishlist]          = useState([]);
   const [searchQuery,      setSearchQuery]       = useState("");
   const [prevCartCount,    setPrevCartCount]     = useState(0);
+  const [selectedProduct,  setSelectedProduct]   = useState(null);
 
   // ── Checkout state
   const [isCheckingOut, setIsCheckingOut] = useState(false);
@@ -783,6 +951,10 @@ const TeeNaturalProducts = () => {
     const text = `Hi! I'd like to purchase *${product.name}*${qtyLabel} for ₦${price.toLocaleString()}`;
     window.open(`https://wa.me/${VENDOR_PHONE}?text=${encodeURIComponent(text)}`);
   };
+
+  // ── Product detail modal handlers
+  const handleCardClick = (product) => setSelectedProduct(product);
+  const handleCloseModal = () => setSelectedProduct(null);
 
   // ── Checkout: POST /api/orders → POST /api/orders/pay → Paystack redirect
   const handleCheckout = async () => {
@@ -1003,6 +1175,7 @@ const { data: paystack } = await api.post(
                     onWishlist={toggleWishlist}
                     isWishlisted={wishlist.includes(product._id)}
                     onPurchaseNow={handlePurchaseNow}
+                    onCardClick={handleCardClick}
                   />
                 ))}
               </motion.div>
@@ -1073,6 +1246,21 @@ const { data: paystack } = await api.post(
             totalPrice={totalPrice}
             onCheckout={handleCheckout}
             isCheckingOut={isCheckingOut}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* ══ PRODUCT DETAIL MODAL ═════════════════════════════════════════════ */}
+      <AnimatePresence>
+        {selectedProduct && (
+          <ProductModal
+            product={selectedProduct}
+            onClose={handleCloseModal}
+            quantity={getQuantity(selectedProduct._id)}
+            onAddToCart={handleAddToCart}
+            onIncrement={handleIncrement}
+            onDecrement={handleDecrement}
+            onPurchaseNow={handlePurchaseNow}
           />
         )}
       </AnimatePresence>
